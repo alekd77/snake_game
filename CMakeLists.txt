@@ -17,6 +17,6 @@ endif(WIN32)
 
 find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
-add_executable(Snake_New main.cpp)
+add_executable(Snake_New main.cpp src/game_manager.cpp src/game_state.h)
 
 target_link_libraries (Snake_New sfml-graphics sfml-audio)
