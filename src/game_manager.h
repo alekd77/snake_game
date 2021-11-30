@@ -29,10 +29,12 @@ public:
     void ClearGameStatesStack();
     void ChangeState(const std::shared_ptr<StateInterface>& state);
 
-    const std::shared_ptr<StateInterface>& GetCurrentState() const;
+    std::shared_ptr<StateInterface> GetCurrentState() const;
 
     void SetGameMode(GameMode mode);
     void SetDifficultyLevel(DifficultyLevel difficulty);
     void SetGameStatus(GameStatus status);
+
+    const GameMode& GetGameMode() const {return this->gameMode;}
 };
 #endif //SNAKE_NEW_GAME_MANAGER_H

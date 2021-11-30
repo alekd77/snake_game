@@ -6,6 +6,8 @@ GameManager::GameManager() {
     this->difficultyLevel = DL_DEBUG;
     this->gameStatus = GS_DEBUG;
 
+
+
 }
 
 GameManager::~GameManager() {
@@ -33,7 +35,7 @@ void GameManager::ChangeState(const std::shared_ptr<StateInterface>& state) {
     PushState(state);
 }
 
-const std::shared_ptr<StateInterface>& GameManager::GetCurrentState() const {
+std::shared_ptr<StateInterface> GameManager::GetCurrentState() const {
     return this->gameStatesStack.top();
 }
 

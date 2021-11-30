@@ -1,15 +1,17 @@
 #ifndef SNAKE_NEW_STATE_INTERFACE_H
 #define SNAKE_NEW_STATE_INTERFACE_H
 
+#include <utility>
+
 #include "game_manager.h"
 
 class StateInterface {
 protected:
-    std::unique_ptr<GameManager> gameManager;
+    GameManager* gameManager;
 
 public:
-    explicit StateInterface(std::unique_ptr<GameManager> manager)
-        : gameManager(std::move(manager)) {};
+    explicit StateInterface(GameManager* manager)
+        : gameManager(manager) {};
     ~StateInterface() = default;
 
     virtual void InitStateSettings() = 0;
