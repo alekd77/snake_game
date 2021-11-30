@@ -19,6 +19,12 @@ private:
     GameMode gameMode;
     DifficultyLevel difficultyLevel;
     GameStatus gameStatus;
+    int currentGameLevel;
+    const int maxCampaignLevel = 50;
+    sf::Time timePerLevel;
+    double levelTargetPointsMultiplier;
+    int leftLives;
+    int currentScore;
 
 public:
     GameManager();
@@ -28,13 +34,28 @@ public:
     void PopState();
     void ClearGameStatesStack();
     void ChangeState(const std::shared_ptr<StateInterface>& state);
+    void InitGameManagerSettings();
 
     std::shared_ptr<StateInterface> GetCurrentState() const;
+    GameMode GetGameMode() const;
+    DifficultyLevel GetDifficultyLevel() const;
+    GameStatus GetGameStatus() const;
+    int GetCurrentGameLevel() const;
+    int GetMaxCampaignLevel() const;
+    sf::Time GetTimePerLevel() const;
+    double GetLevelTargetPointsMultiplier() const;
+    int GetLeftLives() const;
+    int GetCurrentScore() const;
 
     void SetGameMode(GameMode mode);
     void SetDifficultyLevel(DifficultyLevel difficulty);
     void SetGameStatus(GameStatus status);
+    void SetCurrentGameLevel(int level);
+    void SetTimePerLevel(sf::Time time);
+    void SetLevelTargetPointsMultiplier(double multiplier);
+    void SetLeftLives(int lives);
+    void SetCurrentScore(int score);
 
-    const GameMode& GetGameMode() const {return this->gameMode;}
+    void DisplayBasicGameInfo();
 };
 #endif //SNAKE_NEW_GAME_MANAGER_H

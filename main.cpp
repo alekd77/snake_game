@@ -5,13 +5,7 @@
 int main()
 {
     GameManager manager;
-    StateMenu menu(&manager);
-
-    std::cout << manager.GetGameMode() << std::endl;
-    manager.PushState(std::make_shared<StateMenu>(menu));
-
-    manager.GetCurrentState()->InitStateSettings();
-    std::cout << manager.GetGameMode() << std::endl;
+    manager.GetCurrentState()->Update(sf::seconds(0));
 
     return 0;
 }
