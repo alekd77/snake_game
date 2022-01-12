@@ -1,14 +1,13 @@
 #include "game_manager.h"
-#include "state_menu.h"
+#include "states/state_menu.h"
 #include <iostream>
 #include <string>
 
 GameManager::GameManager() {
     InitGameManagerSettings();
 
-    // Creates init state which is menu and added it to states stack
+    // Creates init state which is menu and add it to states stack.
     PushState(std::make_shared<StateMenu>(this));
-
     GetCurrentState()->InitStateSettings();
 }
 

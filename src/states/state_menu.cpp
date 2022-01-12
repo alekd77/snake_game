@@ -1,6 +1,9 @@
 #include "state_menu.h"
+#include <iostream>
 
 void StateMenu::InitStateSettings() {
+    std::cout << "\nEntered menu state.\n";
+
     DebugInitSettings();
 }
 
@@ -23,9 +26,9 @@ void StateMenu::Draw(sf::Time deltaTime) {
 }
 
 void StateMenu::ExitStateSettings() {
-    this->gameManager->DisplayBasicGameInfo();
     LoadLevelsSettings();
-    this->gameManager->DisplayBasicGameInfo();
+
+    std::cout << "\nExited menu state.\n";
 
     //this->gameManager->ChangeState(std::make_shared<StatePlay>(this->gameManager));
     //this->gameManager->GetCurrentState()->InitStateSettings();
