@@ -1,9 +1,11 @@
 #include "state_menu.h"
 #include <iostream>
 
+StateMenu::StateMenu(GameManager* manager)
+    : StateInterface(manager) {}
+
 void StateMenu::InitStateSettings() {
     std::cout << "\nEntered menu state.\n";
-
     DebugInitSettings();
 }
 
@@ -45,6 +47,7 @@ bool StateMenu::IsMenuActive() const {
 }
 
 void StateMenu::LoadLevelsSettings() {
+    GameModeBasedSettings();
     DifficultyLevelBasedSettings();
 
     this->gameManager->SetGameStatus(PAUSED);

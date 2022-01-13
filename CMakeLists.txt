@@ -17,8 +17,35 @@ endif(WIN32)
 
 find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
-add_executable(Snake_New main.cpp src/game_manager.cpp src/states/state_menu.cpp
-        src/game_logic/board/board.cpp src/game_logic/board/obstacles.cpp
-        src/game_logic/board/food.cpp)
+set(STATES src/states)
+set(BOARD_LOGIC src/game_logic/board)
+set(SNAKE_LOGIC src/game_logic/snake)
+
+include_directories(${STATES})
+include_directories(${BOARD_LOGIC})
+include_directories(${SNAKE_LOGIC})
+
+set(
+        SOURCE_FILES
+        main.cpp
+        src/game_manager.cpp
+        src/game_manager.h
+
+        ${STATES}/state_menu.cpp
+        ${STATES}/state_menu.h
+        ${STATES}/state_play.cpp
+        ${STATES}/state_play.h
+
+        ${BOARD_LOGIC}/board.cpp
+        ${BOARD_LOGIC}/board.h
+        ${BOARD_LOGIC}/obstacles.cpp
+        ${BOARD_LOGIC}/obstacles.h
+        ${BOARD_LOGIC}/food.cpp
+        ${BOARD_LOGIC}/food.h
+
+        ${SNAKE_LOGIC}/snake.cpp
+        ${SNAKE_LOGIC}/snake.h)
+
+add_executable(Snake_New ${SOURCE_FILES})
 
 target_link_libraries (Snake_New sfml-graphics sfml-audio)

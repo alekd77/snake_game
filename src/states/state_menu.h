@@ -5,8 +5,8 @@
 
 class StateMenu : public StateInterface {
 public:
-    explicit StateMenu(GameManager* manager)
-        : StateInterface(manager) {};
+    explicit StateMenu(GameManager* manager);
+
     void InitStateSettings() override;
     void DebugInitSettings();
     void HandleInput() override;

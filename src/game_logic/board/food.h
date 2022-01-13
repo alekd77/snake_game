@@ -9,8 +9,8 @@ enum FoodType {NONE_FOOD, CANE, CHERRY, COOKIE_BROWN,
 class Food {
 private:
     FoodType type;
-    int exp;
     int health;
+    int exp;
 
 public:
     Food(FoodType foodType, int xp, int healthPts);
