@@ -2,13 +2,13 @@
 #define MAIN_CPP_STATE_PLAY_H
 
 #include "state_interface.h"
-#include "board.h"
-#include "snake.h"
+#include "state_play_view.h"
 
 class StatePlay : public StateInterface {
 private:
     Board board;
     Snake snake;
+    StatePlayView view;
 
     long long unsigned int scoreLevelGoal;
 

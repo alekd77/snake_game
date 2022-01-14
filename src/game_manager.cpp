@@ -6,6 +6,7 @@
 GameManager::GameManager(bool debug) {
     this->isDebug = debug;
     InitGameManagerSettings();
+    CreateWindow();
 
     // Creates init state which is menu and add it to states stack.
     PushState(std::make_shared<StateMenu>(this));
@@ -98,6 +99,10 @@ int GameManager::GetLeftLives() const {
 
 long long unsigned int GameManager::GetCurrentScore() const {
     return this->currentScore;
+}
+
+sf::Window& GameManager::GetWindowToRender() {
+    return this->gameWindow;
 }
 
 void GameManager::SetGameMode(GameMode mode) {
@@ -215,3 +220,31 @@ void GameManager::DisplayBasicGameInfo() {
     << "\nCurrent score: " << this->currentScore
     << "\n***************************\n";
 }
+
+void GameManager::CreateWindow() {
+    this->gameWindow.create(sf::VideoMode(
+            1260, 820),
+                            "Snake");
+    this->gameWindow.setFramerateLimit(60);
+}
+
+void GameManager::MainGameLoop() {
+    sf::Clock mainLoopClock;
+
+    while (this->gameWindow.isOpen())
+    {
+        sf::Time frameElapsedTime = mainLoopClock.restart();
+        sf::Time deltaTime = frameElapsedTime;
+
+        if (GetCurrentState() == nullptr)
+            continue;
+
+        GetCurrentState()->HandleInput();
+        GetCurrentState()->Update(deltaTime);
+        GetCurrentState()->Draw(deltaTime);
+
+        this->gameWindow.display();
+    }
+}
+
+

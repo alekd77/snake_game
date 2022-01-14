@@ -2,7 +2,8 @@
 #include <iostream>
 
 StatePlay::StatePlay(GameManager* manager) : StateInterface(manager),
-    board(*manager), snake(*manager) {
+    board(*manager), snake(*manager), view(this->board,
+    this->snake, this->gameManager->GetWindowToRender()) {
     this->scoreLevelGoal = 0;
 }
 
@@ -33,7 +34,7 @@ void StatePlay::Update(sf::Time deltaTime) {
 }
 
 void StatePlay::Draw(sf::Time deltaTime) {
-
+    this->view.Draw();
 }
 
 void StatePlay::ExitStateSettings() {

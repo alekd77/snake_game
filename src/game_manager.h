@@ -27,6 +27,8 @@ private:
     int leftLives;
     long long unsigned int currentScore;
 
+    sf::Window gameWindow;
+
 public:
     explicit GameManager(bool debug);
     ~GameManager();
@@ -48,6 +50,7 @@ public:
     double GetLevelTargetPointsMultiplier() const;
     int GetLeftLives() const;
     long long unsigned int GetCurrentScore() const;
+    sf::Window& GetWindowToRender();
 
     void SetGameMode(GameMode mode);
     void SetDifficultyLevel(DifficultyLevel difficulty);
@@ -59,5 +62,11 @@ public:
     void SetCurrentScore(int score);
 
     void DisplayBasicGameInfo();
+
+    // View
+    void CreateWindow();
+
+
+    void MainGameLoop();
 };
 #endif //SNAKE_NEW_GAME_MANAGER_H
