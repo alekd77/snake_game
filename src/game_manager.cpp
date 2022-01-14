@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 
-GameManager::GameManager() {
+GameManager::GameManager(bool debug) {
+    this->isDebug = debug;
     InitGameManagerSettings();
 
     // Creates init state which is menu and add it to states stack.
@@ -38,15 +39,25 @@ void GameManager::ChangeState(const std::shared_ptr<StateInterface>& state) {
 
 void GameManager::InitGameManagerSettings() {
     ClearGameStatesStack();
-
-    this->gameMode = GM_DEBUG;
-    this->difficultyLevel = DL_DEBUG;
-    this->gameStatus = GS_DEBUG;
-    this->currentGameLevel = -1;
-    this->timePerLevel = sf::seconds(-1);
+    this->gameStatus = GS_NONE;
+    this->currentGameLevel = 0;
+    this->timePerLevel = sf::seconds(0);
     this->levelTargetPointsMultiplier = 0.0;
-    this->leftLives = -1;
-    this->currentScore = -1;
+    this->leftLives = 0;
+    this->currentScore = 0;
+
+    if (this->isDebug) {
+        this->gameMode = GM_DEBUG;
+        this->difficultyLevel = DL_DEBUG;
+        return;
+    }
+
+    this->gameMode = GM_NONE;
+    this->difficultyLevel = DL_NONE;
+}
+
+bool GameManager::IsDebug() const {
+    return this->isDebug;
 }
 
 std::shared_ptr<StateInterface> GameManager::GetCurrentState() const {
@@ -85,7 +96,7 @@ int GameManager::GetLeftLives() const {
     return this->leftLives;
 }
 
-int GameManager::GetCurrentScore() const {
+long long unsigned int GameManager::GetCurrentScore() const {
     return this->currentScore;
 }
 
@@ -125,8 +136,8 @@ void GameManager::DisplayBasicGameInfo() {
     std::string mode, difficulty, status;
 
     switch (this->gameMode) {
-        case GM_DEBUG: {
-            mode = "GM_DEBUG";
+        case GM_NONE: {
+            mode = "GM_NONE";
             break;
         }
         case CAMPAIGN: {
@@ -137,11 +148,15 @@ void GameManager::DisplayBasicGameInfo() {
             mode = "ENDLESS";
             break;
         }
+        case GM_DEBUG: {
+            mode = "GM_DEBUG";
+            break;
+        }
     }
 
     switch (this->difficultyLevel) {
-        case DL_DEBUG: {
-            difficulty = "DL_DEBUG";
+        case DL_NONE: {
+            difficulty = "DL_NONE";
             break;
         }
         case EASY: {
@@ -156,10 +171,14 @@ void GameManager::DisplayBasicGameInfo() {
             difficulty = "HARD";
             break;
         }
+        case DL_DEBUG: {
+            difficulty = "DL_DEBUG";
+            break;
+        }
     }
 
     switch (this->gameStatus) {
-        case GS_DEBUG: {
+        case GS_NONE: {
             status = "GS_DEBUG";
             break;
         }
@@ -183,8 +202,8 @@ void GameManager::DisplayBasicGameInfo() {
             status = "FINISHED_WIN";
             break;
         }
-
     }
+
     std::cout << "\n\n***************************"
     << "\nGame mode: " << mode
     << "\nDifficulty level: " << difficulty

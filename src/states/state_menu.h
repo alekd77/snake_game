@@ -8,7 +8,6 @@ public:
     explicit StateMenu(GameManager* manager);
 
     void InitStateSettings() override;
-    void DebugInitSettings();
     void HandleInput() override;
     void Update(sf::Time deltaTime) override;
     void Draw(sf::Time deltaTime) override;
@@ -16,13 +15,14 @@ public:
 
     bool IsMenuActive() const;
 
+    void DebugInitSettings();
     void LoadLevelsSettings();
     void GameModeBasedSettings();
     void CampaignModeSettings();
     void EndlessModeSettings();
     void DifficultyLevelBasedSettings();
-    void EasyDifficultySettings();
-    void NormalDifficultySettings();
-    void HardDifficultySettings();
+    void EasyDifficultyLevelSettings();
+    void NormalDifficultyLevelSettings();
+    void HardDifficultyLevelSettings();
 };
 #endif //SNAKE_NEW_STATE_MENU_H

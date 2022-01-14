@@ -1,11 +1,12 @@
 #include "board.h"
 #include <iostream>
 
-Board::Board() {
+Board::Board(GameManager& manager) : gameManager(manager) {
     this->obstaclesCounter = 0;
     this->foodCounter = 0;
     this->isExitAvailable = false;
     SetDefaultBoard();
+    CreateLevelCustomizedBoard();
 }
 
 int Board::GetBoardWidth() const {
@@ -102,6 +103,11 @@ void Board::SetDefaultBoard() {
     this->board = temp;
 }
 
+void Board::CreateLevelCustomizedBoard() {
+    if (this->gameManager.IsDebug())
+        return;
+}
+
 void Board::SetObstacleOnField(ObstacleType obsType, sf::Vector2i pos) {
     if (!IsFieldFree(pos))
         return;
@@ -132,6 +138,14 @@ void Board::RemoveFoodFromField(sf::Vector2i pos) {
 
     this->board.at(pos.x).at(pos.y).hasFood = NONE_FOOD;
     --foodCounter;
+}
+
+void Board::SetExitFieldEnable() {
+    if (this->gameManager.GetGameMode() == CAMPAIGN) {
+        SetFieldAsLevelExit({1,1});
+        return;
+    }
+
 }
 
 void Board::SetFieldAsLevelExit(sf::Vector2i pos) {

@@ -88,6 +88,10 @@ void Snake::Turn(std::pair<int, int> direction) {
     this->currentDirection = direction;
 }
 
+void Snake::Update() {
+    Move();
+}
+
 void Snake::DebugDisplay(int width, int height) {
     bool isSnakeOnField;
 

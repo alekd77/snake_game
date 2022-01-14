@@ -18,10 +18,12 @@ endif(WIN32)
 find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
 set(STATES src/states)
+set(STATES_VIEWS src/states/views)
 set(BOARD_LOGIC src/game_logic/board)
 set(SNAKE_LOGIC src/game_logic/snake)
 
 include_directories(${STATES})
+include_directories(${STATES_VIEWS})
 include_directories(${BOARD_LOGIC})
 include_directories(${SNAKE_LOGIC})
 
@@ -36,6 +38,9 @@ set(
         ${STATES}/state_play.cpp
         ${STATES}/state_play.h
 
+        ${STATES_VIEWS}/state_play_view.cpp
+        ${STATES_VIEWS}/state_play_view.h
+
         ${BOARD_LOGIC}/board.cpp
         ${BOARD_LOGIC}/board.h
         ${BOARD_LOGIC}/obstacles.cpp
@@ -44,7 +49,8 @@ set(
         ${BOARD_LOGIC}/food.h
 
         ${SNAKE_LOGIC}/snake.cpp
-        ${SNAKE_LOGIC}/snake.h)
+        ${SNAKE_LOGIC}/snake.h
+)
 
 add_executable(Snake_New ${SOURCE_FILES})
 

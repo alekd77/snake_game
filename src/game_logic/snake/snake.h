@@ -1,7 +1,6 @@
 #ifndef SNAKE_NEW_SNAKE_H
 #define SNAKE_NEW_SNAKE_H
 
-#include "SFML/Graphics.hpp"
 #include "../../game_manager.h"
 #include <deque>
 
@@ -30,6 +29,8 @@ public:
 
     void Move();
     void Turn(std::pair<int, int> direction);
+
+    void Update();
 
     void DebugDisplay(int width, int height);
 };

@@ -1,4 +1,5 @@
 #include "state_menu.h"
+#include "state_play.h"
 #include <iostream>
 
 StateMenu::StateMenu(GameManager* manager)
@@ -6,12 +7,11 @@ StateMenu::StateMenu(GameManager* manager)
 
 void StateMenu::InitStateSettings() {
     std::cout << "\nEntered menu state.\n";
-    DebugInitSettings();
-}
 
-void StateMenu::DebugInitSettings() {
-    this->gameManager->SetGameMode(CAMPAIGN);
-    this->gameManager->SetDifficultyLevel(NORMAL);
+    if (!this->gameManager->IsDebug())
+        return;
+
+    DebugInitSettings();
 }
 
 void StateMenu::HandleInput() {
@@ -19,6 +19,8 @@ void StateMenu::HandleInput() {
 }
 
 void StateMenu::Update(sf::Time deltaTime) {
+    std::cout << "\nMenu state...\n";
+
     if (!IsMenuActive())
         ExitStateSettings();
 }
@@ -30,41 +32,49 @@ void StateMenu::Draw(sf::Time deltaTime) {
 void StateMenu::ExitStateSettings() {
     LoadLevelsSettings();
 
-    std::cout << "\nExited menu state.\n";
+    this->gameManager->ChangeState(
+            std::make_shared<StatePlay>(this->gameManager));
+    this->gameManager->GetCurrentState()->InitStateSettings();
 
-    //this->gameManager->ChangeState(std::make_shared<StatePlay>(this->gameManager));
-    //this->gameManager->GetCurrentState()->InitStateSettings();
+    std::cout << "\nExited menu state.\n";
 }
 
 bool StateMenu::IsMenuActive() const {
-    if (this->gameManager->GetGameMode() == GM_DEBUG)
+    if (this->gameManager->GetGameMode() == GM_NONE)
         return true;
 
-    if (this->gameManager->GetDifficultyLevel() == DL_DEBUG)
+    if (this->gameManager->GetDifficultyLevel() == DL_NONE)
         return true;
 
     return false;
 }
 
+void StateMenu::DebugInitSettings() {
+    this->gameManager->SetGameMode(CAMPAIGN);
+    this->gameManager->SetDifficultyLevel(NORMAL);
+}
+
 void StateMenu::LoadLevelsSettings() {
-    GameModeBasedSettings();
     DifficultyLevelBasedSettings();
-
-    this->gameManager->SetGameStatus(PAUSED);
-    this->gameManager->SetCurrentGameLevel(1);
+    GameModeBasedSettings();
     this->gameManager->SetCurrentScore(0);
-
-    if (this->gameManager->GetGameMode() == ENDLESS)
-        this->gameManager->SetLeftLives(1);
 }
 
 void StateMenu::GameModeBasedSettings() {
-    if (this->gameManager->GetGameMode() == CAMPAIGN) {
-        CampaignModeSettings();
-        return;
+    switch (this->gameManager->GetGameMode()) {
+        case GM_NONE:
+            return;
+        case CAMPAIGN: {
+            CampaignModeSettings();
+            return;
+        }
+        case ENDLESS: {
+            EndlessModeSettings();
+            return;
+        }
+        case GM_DEBUG:
+            return;
     }
-
-    EndlessModeSettings();
 }
 
 void StateMenu::CampaignModeSettings() {
@@ -72,36 +82,43 @@ void StateMenu::CampaignModeSettings() {
 }
 
 void StateMenu::EndlessModeSettings() {
-
+    this->gameManager->SetLeftLives(1);
 }
 
 void StateMenu::DifficultyLevelBasedSettings() {
-    if (this->gameManager->GetDifficultyLevel() == EASY) {
-        EasyDifficultySettings();
-        return;
+    switch (this->gameManager->GetDifficultyLevel()) {
+        case DL_NONE:
+            return;
+        case EASY: {
+            EasyDifficultyLevelSettings();
+            return;
+        }
+        case NORMAL: {
+            NormalDifficultyLevelSettings();
+            return;
+        }
+        case HARD: {
+            HardDifficultyLevelSettings();
+            return;
+        }
+        case DL_DEBUG:
+            return;
     }
-
-    if (this->gameManager->GetDifficultyLevel() == NORMAL) {
-        NormalDifficultySettings();
-        return;
-    }
-
-    HardDifficultySettings();
 }
 
-void StateMenu::EasyDifficultySettings() {
+void StateMenu::EasyDifficultyLevelSettings() {
     this->gameManager->SetLeftLives(5);
     this->gameManager->SetTimePerLevel(sf::seconds(60));
     this->gameManager->SetLevelTargetPointsMultiplier(0.3);
 }
 
-void StateMenu::NormalDifficultySettings() {
+void StateMenu::NormalDifficultyLevelSettings() {
     this->gameManager->SetLeftLives(3);
     this->gameManager->SetTimePerLevel(sf::seconds(45));
     this->gameManager->SetLevelTargetPointsMultiplier(0.35);
 }
 
-void StateMenu::HardDifficultySettings() {
+void StateMenu::HardDifficultyLevelSettings() {
     this->gameManager->SetLeftLives(1);
     this->gameManager->SetTimePerLevel(sf::seconds(30));
     this->gameManager->SetLevelTargetPointsMultiplier(0.4);

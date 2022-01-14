@@ -2,12 +2,13 @@
 #define SNAKE_NEW_GAME_MANAGER_H
 
 #include <stack>
+#include <queue>
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-enum GameMode {GM_DEBUG, CAMPAIGN, ENDLESS};
-enum DifficultyLevel {DL_DEBUG, EASY, NORMAL, HARD};
-enum GameStatus {GS_DEBUG, RUNNING, PAUSED,
+enum GameMode {GM_NONE, CAMPAIGN, ENDLESS, GM_DEBUG};
+enum DifficultyLevel {DL_NONE, EASY, NORMAL, HARD, DL_DEBUG};
+enum GameStatus {GS_NONE, RUNNING, PAUSED,
         FINISHED_LOSS, FINISHED_LEVEL, FINISHED_WIN};
 
 class StateInterface;
@@ -15,19 +16,19 @@ class StateInterface;
 class GameManager {
 private:
     std::stack<std::shared_ptr<StateInterface>> gameStatesStack;
-
+    bool isDebug;
     GameMode gameMode;
     DifficultyLevel difficultyLevel;
     GameStatus gameStatus;
     int currentGameLevel;
-    const int maxCampaignLevel = 50;
+    const int maxCampaignLevel = 10;
     sf::Time timePerLevel;
     double levelTargetPointsMultiplier;
     int leftLives;
-    int currentScore;
+    long long unsigned int currentScore;
 
 public:
-    GameManager();
+    explicit GameManager(bool debug);
     ~GameManager();
 
     void PushState(const std::shared_ptr<StateInterface>& state);
@@ -36,6 +37,7 @@ public:
     void ChangeState(const std::shared_ptr<StateInterface>& state);
     void InitGameManagerSettings();
 
+    bool IsDebug() const;
     std::shared_ptr<StateInterface> GetCurrentState() const;
     GameMode GetGameMode() const;
     DifficultyLevel GetDifficultyLevel() const;
@@ -45,7 +47,7 @@ public:
     sf::Time GetTimePerLevel() const;
     double GetLevelTargetPointsMultiplier() const;
     int GetLeftLives() const;
-    int GetCurrentScore() const;
+    long long unsigned int GetCurrentScore() const;
 
     void SetGameMode(GameMode mode);
     void SetDifficultyLevel(DifficultyLevel difficulty);

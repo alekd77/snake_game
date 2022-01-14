@@ -1,9 +1,9 @@
 #ifndef SNAKE_NEW_BOARD_H
 #define SNAKE_NEW_BOARD_H
 
+#include "../../game_manager.h"
 #include "obstacles.h"
 #include "food.h"
-#include <vector>
 
 struct Field {
     ObstacleType hasObstacle;
@@ -13,6 +13,7 @@ struct Field {
 
 class Board {
 private:
+    GameManager& gameManager;
     std::vector<std::vector<Field>> board;
     const int width = 40;
     const int height = 30;
@@ -21,7 +22,7 @@ private:
     bool isExitAvailable;
 
 public:
-    Board();
+    explicit Board(GameManager& manager);
 
     int GetBoardWidth() const;
     int GetBoardHeight() const;
@@ -33,12 +34,14 @@ public:
     char GetFieldInfo(sf::Vector2i pos) const;
 
     void SetDefaultBoard();
+    void CreateLevelCustomizedBoard();
     void SetObstacleOnField(ObstacleType obsType,
                             sf::Vector2i pos);
     void RemoveObstacleFromField(sf::Vector2i pos);
     void SetFoodOnField(FoodType foodType,
                         sf::Vector2i pos);
     void RemoveFoodFromField(sf::Vector2i pos);
+    void SetExitFieldEnable();
     void SetFieldAsLevelExit(sf::Vector2i pos);
     void ClearField(sf::Vector2i pos);
 
