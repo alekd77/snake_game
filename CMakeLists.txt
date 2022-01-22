@@ -17,14 +17,22 @@ endif(WIN32)
 
 find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 
-set(STATES src/states)
-set(STATES_VIEWS src/states/views)
-set(BOARD_LOGIC src/game_logic/board)
-set(SNAKE_LOGIC src/game_logic/snake)
+# ASSETS
+set(ASSETS src/assets/assets_managers)
+include_directories(${ASSETS})
 
+#STATES
+set(STATES src/states)
 include_directories(${STATES})
+
+#VIEWS
+set(STATES_VIEWS src/states/views)
 include_directories(${STATES_VIEWS})
+
+#LOGIC
+set(BOARD_LOGIC src/game_logic/board)
 include_directories(${BOARD_LOGIC})
+set(SNAKE_LOGIC src/game_logic/snake)
 include_directories(${SNAKE_LOGIC})
 
 set(
@@ -32,6 +40,18 @@ set(
         main.cpp
         src/game_manager.cpp
         src/game_manager.h
+
+        ${ASSETS}/assets_manager.cpp
+        ${ASSETS}/assets_manager.h
+        ${ASSETS}/textures_manager.cpp
+        ${ASSETS}/textures_manager.h
+        ${ASSETS}/sprites_manager.cpp
+        ${ASSETS}/sprites_manager.h
+        ${ASSETS}/sounds_manager.cpp
+        ${ASSETS}/sounds_manager.h
+        ${ASSETS}/fonts_manager.cpp
+        ${ASSETS}/fonts_manager.h
+
 
         ${STATES}/state_menu.cpp
         ${STATES}/state_menu.h
@@ -54,4 +74,4 @@ set(
 
 add_executable(Snake_New ${SOURCE_FILES})
 
-target_link_libraries (Snake_New sfml-graphics sfml-audio)
+target_link_libraries (Snake_New sfml-graphics sfml-audio libstdc++fs.a)

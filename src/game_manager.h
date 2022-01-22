@@ -5,6 +5,7 @@
 #include <queue>
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "../assets_managers/assets_manager.h"
 
 enum GameMode {GM_NONE, CAMPAIGN, ENDLESS, GM_DEBUG};
 enum DifficultyLevel {DL_NONE, EASY, NORMAL, HARD, DL_DEBUG};
@@ -28,6 +29,7 @@ private:
     long long unsigned int currentScore;
 
     sf::Window gameWindow;
+    AssetsManager assetsManager;
 
 public:
     explicit GameManager(bool debug);

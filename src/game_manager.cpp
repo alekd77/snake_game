@@ -6,6 +6,7 @@
 GameManager::GameManager(bool debug) {
     this->isDebug = debug;
     InitGameManagerSettings();
+    this->assetsManager.LoadAssets();
     CreateWindow();
 
     // Creates init state which is menu and add it to states stack.
