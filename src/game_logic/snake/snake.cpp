@@ -2,7 +2,12 @@
 #include <iostream>
 
 Snake::Snake(GameManager& manager) : gameManager(manager) {
-    InitLevelSettings();
+    this->currentVelocity = 0;
+    this->currentHealth = 0;
+}
+
+const std::deque<sf::Vector2i>& Snake::GetSnakePos() const {
+    return this->snakePos;
 }
 
 sf::Vector2i Snake::GetCurrentSnakeHeadPos() const {
@@ -15,6 +20,13 @@ int Snake::GetCurrentVelocity() const {
 
 int Snake::GetCurrentHealth() const {
     return this->currentHealth;
+}
+
+void Snake::InitLevelSettings() {
+    this->currentVelocity = 10;
+    this->currentHealth = 100;
+    SetInitSnakePos();
+    SetInitDirection();
 }
 
 void Snake::SetInitSnakePos() {
@@ -50,13 +62,6 @@ void Snake::SetCurrentHealth(bool subtract, int health) {
         this->currentHealth -= health;
 
     this->currentHealth += health;
-}
-
-void Snake::InitLevelSettings() {
-    this->currentVelocity = 10;
-    this->currentHealth = 100;
-    SetInitSnakePos();
-    SetInitDirection();
 }
 
 void Snake::Move() {

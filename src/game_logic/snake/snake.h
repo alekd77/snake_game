@@ -17,15 +17,16 @@ private:
 public:
     explicit Snake(GameManager& manager);
 
+    const std::deque<sf::Vector2i>& GetSnakePos() const;
     sf::Vector2i GetCurrentSnakeHeadPos() const;
     int GetCurrentVelocity() const;
     int GetCurrentHealth() const;
 
+    void InitLevelSettings();
     void SetInitSnakePos();
     void SetInitDirection();
     void SetCurrentVelocity(bool subtract, int velocity);
     void SetCurrentHealth(bool subtract, int health);
-    void InitLevelSettings();
 
     void Move();
     void Turn(std::pair<int, int> direction);

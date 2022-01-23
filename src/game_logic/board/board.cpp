@@ -5,8 +5,6 @@ Board::Board(GameManager& manager) : gameManager(manager) {
     this->obstaclesCounter = 0;
     this->foodCounter = 0;
     this->isExitAvailable = false;
-    SetDefaultBoard();
-    CreateLevelCustomizedBoard();
 }
 
 int Board::GetBoardWidth() const {
@@ -92,7 +90,18 @@ char Board::GetFieldInfo(sf::Vector2i pos) const {
     return '_';
 }
 
-void Board::SetDefaultBoard() {
+void Board::InitLevelSettings() {
+    this->obstaclesCounter = 0;
+    this->foodCounter = 0;
+    this->isExitAvailable = false;
+
+    if (this->gameManager.IsDebug())
+        CreateDefaultBoard();
+    else
+        CreateLevelCustomizedBoard();
+}
+
+void Board::CreateDefaultBoard() {
     std::vector<std::vector<Field>> temp(
             this->width, std::vector<Field>(
                     this->height, {

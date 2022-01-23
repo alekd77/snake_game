@@ -15,8 +15,8 @@ class Board {
 private:
     GameManager& gameManager;
     std::vector<std::vector<Field>> board;
-    const int width = 40;
-    const int height = 30;
+    const int width = 42;
+    const int height = 24;
     int obstaclesCounter;
     int foodCounter;
     bool isExitAvailable;
@@ -33,7 +33,8 @@ public:
     int GetFoodCount() const;
     char GetFieldInfo(sf::Vector2i pos) const;
 
-    void SetDefaultBoard();
+    void InitLevelSettings();
+    void CreateDefaultBoard();
     void CreateLevelCustomizedBoard();
     void SetObstacleOnField(ObstacleType obsType,
                             sf::Vector2i pos);
