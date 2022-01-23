@@ -48,8 +48,6 @@ set(
         ${ASSETS}/assets_manager.h
         ${ASSETS}/textures_manager.cpp
         ${ASSETS}/textures_manager.h
-        ${ASSETS}/sprites_manager.cpp
-        ${ASSETS}/sprites_manager.h
         ${ASSETS}/sounds_manager.cpp
         ${ASSETS}/sounds_manager.h
         ${ASSETS}/fonts_manager.cpp

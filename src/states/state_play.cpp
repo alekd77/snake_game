@@ -10,55 +10,6 @@ StatePlay::StatePlay(GameManager* manager) : StateInterface(manager),
     this->scoreLevelGoal = 0;
 }
 
-void StatePlay::InitStateSettings() {
-    std::cout << "\nEntered play state.\n";
-
-    this->gameManager->SetGameStatus(PAUSED);
-    this->gameManager->SetCurrentGameLevel(
-            this->gameManager->GetCurrentGameLevel() + 1);
-    this->board.InitLevelSettings();
-    this->snake.InitLevelSettings();
-    this->view.InitStateViewSettings();
-    SetScoreGoalPerLevel();
-}
-
-void StatePlay::HandleInput() {
-
-}
-
-void StatePlay::Update(sf::Time deltaTime) {
-    std::cout << "\nPlay state...\n";
-
-    UpdateGameStatus();
-    UpdateLeftLives();
-    UpdateBoard();
-    //UpdateSnake();
-    UpdateCollision();
-    this->view.UpdateStateView();
-
-    if (IsLevelFinished())
-        ExitStateSettings();
-}
-
-void StatePlay::Draw(sf::Time deltaTime) {
-    this->view.DrawStateView();
-}
-
-void StatePlay::ExitStateSettings() {
-    if (this->gameManager->GetGameStatus() == FINISHED_LOSS or
-            this->gameManager->GetGameStatus() == FINISHED_WIN) {
-        //this->gameManager->ChangeState(
-        //      std::make_shared<StateLeaderboard>(this->gameManager));
-        //this->gameManager->GetCurrentState()->InitStateSettings();
-    } else {
-        this->gameManager->ChangeState(
-                std::make_shared<StatePlay>(this->gameManager));
-        this->gameManager->GetCurrentState()->InitStateSettings();
-    }
-
-    std::cout << "\nExited play state.\n";
-}
-
 bool StatePlay::IsLevelFinished() {
     if (this->gameManager->GetGameStatus() == FINISHED_LOSS)
         return true;
@@ -72,9 +23,56 @@ bool StatePlay::IsLevelFinished() {
     return false;
 }
 
+void StatePlay::InitStateSettings() {
+    std::cout << "\nEntered play state.\n";
+
+    this->gameManager->SetGameStatus(PAUSED);
+    this->gameManager->SetCurrentGameLevel(
+            this->gameManager->GetCurrentGameLevel() + 1);
+    this->board.InitLevelSettings();
+    this->snake.InitLevelSettings();
+    this->view.InitStateViewSettings();
+    SetScoreGoalPerLevel();
+}
+
 void StatePlay::SetScoreGoalPerLevel() {
     this->scoreLevelGoal = this->gameManager->GetCurrentScore() +
-            this->gameManager->GetCurrentGameLevel() * 40;
+                           this->gameManager->GetCurrentGameLevel() * 40;
+}
+
+void StatePlay::HandleInput() {
+
+}
+
+void StatePlay::Update(sf::Time deltaTime) {
+    std::cout << "\nPlay state...\n";
+
+    UpdateGameStatus();
+    UpdateLeftLives();
+    UpdateBoard();
+    //UpdateSnake();
+    //UpdateCollision();
+    UpdateView();
+
+    if (IsLevelFinished())
+        ExitStateSettings();
+}
+
+void StatePlay::UpdateLeftLives() {
+    if (this->snake.GetCurrentHealth() > 0)
+        return;
+
+    this->gameManager->SetLeftLives(
+            this->gameManager->GetLeftLives() - 1);
+    this->gameManager->SetGameStatus(FINISHED_LEVEL);
+}
+
+void StatePlay::UpdateExitLevelField() {
+    if (this->gameManager->GetCurrentScore() <
+        this->scoreLevelGoal)
+        return;
+
+    this->board.SetExitFieldEnable();
 }
 
 void StatePlay::UpdateGameStatus() {
@@ -100,19 +98,25 @@ void StatePlay::UpdateCollision() {
     // }
 }
 
-void StatePlay::UpdateLeftLives() {
-    if (this->snake.GetCurrentHealth() > 0)
-        return;
-
-    this->gameManager->SetLeftLives(
-            this->gameManager->GetLeftLives() - 1);
-    this->gameManager->SetGameStatus(FINISHED_LEVEL);
+void StatePlay::UpdateView() {
+    this->view.UpdateStateView();
 }
 
-void StatePlay::UpdateExitLevelField() {
-    if (this->gameManager->GetCurrentScore() <
-            this->scoreLevelGoal)
-        return;
+void StatePlay::Draw(sf::Time deltaTime) {
+    this->view.DrawStateView();
+}
 
-    this->board.SetExitFieldEnable();
+void StatePlay::ExitStateSettings() {
+    if (this->gameManager->GetGameStatus() == FINISHED_LOSS or
+            this->gameManager->GetGameStatus() == FINISHED_WIN) {
+        //this->gameManager->ChangeState(
+        //      std::make_shared<StateLeaderboard>(this->gameManager));
+        //this->gameManager->GetCurrentState()->InitStateSettings();
+    } else {
+        this->gameManager->ChangeState(
+                std::make_shared<StatePlay>(this->gameManager));
+        this->gameManager->GetCurrentState()->InitStateSettings();
+    }
+
+    std::cout << "\nExited play state.\n";
 }

@@ -15,22 +15,24 @@ private:
 public:
     explicit StatePlay(GameManager* manager);
 
-    void InitStateSettings() override;
-    void HandleInput() override;
-    void Update(sf::Time deltaTime) override;
-    void Draw(sf::Time deltaTime) override;
-    void ExitStateSettings() override;
-
     bool IsLevelFinished();
 
+    void InitStateSettings() override;
     void SetScoreGoalPerLevel();
 
+    void HandleInput() override;
+
+    void Update(sf::Time deltaTime) override;
+    void UpdateLeftLives();
+    void UpdateExitLevelField();
     void UpdateGameStatus();
     void UpdateBoard();
     void UpdateSnake();
     void UpdateCollision();
+    void UpdateView();
 
-    void UpdateLeftLives();
-    void UpdateExitLevelField();
+    void Draw(sf::Time deltaTime) override;
+
+    void ExitStateSettings() override;
 };
 #endif
