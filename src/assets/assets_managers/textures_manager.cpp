@@ -5,17 +5,22 @@
 
 TexturesManager::TexturesManager() = default;
 
-const std::map<std::string, std::shared_ptr<sf::Texture>>&
-    TexturesManager::GetTexturesSharedPtrMap() const {
-    return this->texturesSharedPtrMap;
+const std::map<std::string, sf::Texture>&
+    TexturesManager::GetTexturesMap() const {
+    return this->texturesMap;
 }
 
-std::shared_ptr<sf::Texture> TexturesManager::GetTextureSharedPtr(
+const sf::Texture* TexturesManager::GetTexturePtr(
         const std::string& textureName) const {
-    return this->texturesSharedPtrMap.at(textureName);
+    return &this->texturesMap.at(textureName);
 }
 
-void TexturesManager::AddTextureSharedPtrToMap(
+const sf::Texture& TexturesManager::GetTextureRef(
+        const std::string& textureName) const {
+    return this->texturesMap.at(textureName);
+}
+
+void TexturesManager::AddTextureToMap(
         const std::string& textureName,
         const std::string& fileName) {
     sf::Texture tempTexture;
@@ -23,10 +28,7 @@ void TexturesManager::AddTextureSharedPtrToMap(
     if (!tempTexture.loadFromFile(fileName))
         std::cerr << strerror(errno) << std::endl;
 
-    std::shared_ptr<sf::Texture> textureSharedPtr =
-            std::make_shared<sf::Texture>(tempTexture);
-
-    this->texturesSharedPtrMap[textureName] = textureSharedPtr;
+    this->texturesMap[textureName] = tempTexture;
 }
 
 void TexturesManager::LoadTextures() {
@@ -35,9 +37,10 @@ void TexturesManager::LoadTextures() {
     fs::path texturesDirectoryPath {fs::current_path().parent_path()
                                             /= "src\\assets\\textures"};
 
-    // Loop below adds shared ptr of every texture
-    // from textures directory to texturesSharedPtrMap
-    for(auto const& directoryEntry: fs::directory_iterator{texturesDirectoryPath})
-        AddTextureSharedPtrToMap(directoryEntry.path().stem().string(),
-                                 directoryEntry.path().string());
+    // Loop below adds every texture
+    // from textures directory to texturesMap
+    for(auto const& directoryEntry
+        : fs::directory_iterator{texturesDirectoryPath})
+        AddTextureToMap(directoryEntry.path().stem().string(),
+                        directoryEntry.path().string());
 }

@@ -8,17 +8,17 @@
 
 class TexturesManager {
 private:
-    std::map<std::string, std::shared_ptr<
-            sf::Texture>> texturesSharedPtrMap;
+    std::map<std::string, sf::Texture> texturesMap;
 public:
     TexturesManager();
 
-    const std::map<std::string, std::shared_ptr<
-            sf::Texture>>& GetTexturesSharedPtrMap() const;
-    std::shared_ptr<sf::Texture> GetTextureSharedPtr(
+    const std::map<std::string, sf::Texture>& GetTexturesMap() const;
+    const sf::Texture* GetTexturePtr(
             const std::string& textureName) const;
-    void AddTextureSharedPtrToMap(const std::string& textureName,
-                                  const std::string& fileName);
+    const sf::Texture& GetTextureRef(
+            const std::string& textureName) const;
+    void AddTextureToMap(const std::string& textureName,
+                         const std::string& fileName);
     void LoadTextures();
 };
 #endif //MAIN_CPP_TEXTURES_MANAGER_H
