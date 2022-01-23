@@ -28,7 +28,7 @@ private:
     int leftLives;
     long long unsigned int currentScore;
 
-    sf::Window gameWindow;
+    sf::RenderWindow gameWindow;
     AssetsManager assetsManager;
 
 public:
@@ -52,7 +52,8 @@ public:
     double GetLevelTargetPointsMultiplier() const;
     int GetLeftLives() const;
     long long unsigned int GetCurrentScore() const;
-    sf::Window& GetWindowToRender();
+    sf::RenderWindow& GetWindowToRender();
+    AssetsManager& GetAssetsManagerRef();
 
     void SetGameMode(GameMode mode);
     void SetDifficultyLevel(DifficultyLevel difficulty);

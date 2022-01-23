@@ -2,8 +2,11 @@
 #include <iostream>
 
 StatePlay::StatePlay(GameManager* manager) : StateInterface(manager),
-    board(*manager), snake(*manager), view(this->board,
-    this->snake, this->gameManager->GetWindowToRender()) {
+                board(*manager), snake(*manager),
+                view(this->gameManager->GetWindowToRender(),
+                     this->gameManager->GetAssetsManagerRef()
+                        .GetTexturesManagerRef(),
+                     this->board, this->snake) {
     this->scoreLevelGoal = 0;
 }
 
@@ -13,6 +16,9 @@ void StatePlay::InitStateSettings() {
     this->gameManager->SetGameStatus(PAUSED);
     this->gameManager->SetCurrentGameLevel(
             this->gameManager->GetCurrentGameLevel() + 1);
+    this->board.InitLevelSettings();
+    this->snake.InitLevelSettings();
+    this->view.InitStateViewSettings();
     SetScoreGoalPerLevel();
 }
 
@@ -26,15 +32,16 @@ void StatePlay::Update(sf::Time deltaTime) {
     UpdateGameStatus();
     UpdateLeftLives();
     UpdateBoard();
-    UpdateSnake();
+    //UpdateSnake();
     UpdateCollision();
+    this->view.UpdateStateView();
 
     if (IsLevelFinished())
         ExitStateSettings();
 }
 
 void StatePlay::Draw(sf::Time deltaTime) {
-    this->view.Draw();
+    this->view.DrawStateView();
 }
 
 void StatePlay::ExitStateSettings() {

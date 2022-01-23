@@ -10,7 +10,7 @@ protected:
 public:
     explicit StateInterface(GameManager* manager)
         : gameManager(manager) {};
-    ~StateInterface() = default;
+    virtual ~StateInterface() = default;
 
     virtual void InitStateSettings() = 0;
     virtual void HandleInput() = 0;

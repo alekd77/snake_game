@@ -102,8 +102,12 @@ long long unsigned int GameManager::GetCurrentScore() const {
     return this->currentScore;
 }
 
-sf::Window& GameManager::GetWindowToRender() {
+sf::RenderWindow& GameManager::GetWindowToRender() {
     return this->gameWindow;
+}
+
+AssetsManager& GameManager::GetAssetsManagerRef() {
+    return this->assetsManager;
 }
 
 void GameManager::SetGameMode(GameMode mode) {

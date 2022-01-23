@@ -21,19 +21,22 @@ find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 set(ASSETS src/assets/assets_managers)
 include_directories(${ASSETS})
 
-#STATES
-set(STATES src/states)
-include_directories(${STATES})
-
-#VIEWS
-set(STATES_VIEWS src/states/views)
-include_directories(${STATES_VIEWS})
-
 #LOGIC
 set(BOARD_LOGIC src/game_logic/board)
 include_directories(${BOARD_LOGIC})
 set(SNAKE_LOGIC src/game_logic/snake)
 include_directories(${SNAKE_LOGIC})
+
+#STATES
+set(STATES src/states)
+include_directories(${STATES})
+
+#STATES_VIEWS
+set(STATES_VIEWS src/states/views)
+include_directories(${STATES_VIEWS})
+#VIEWS_TILES
+set(VIEWS_TILES src/states/views/tiles)
+include_directories(${VIEWS_TILES})
 
 set(
         SOURCE_FILES
@@ -52,24 +55,24 @@ set(
         ${ASSETS}/fonts_manager.cpp
         ${ASSETS}/fonts_manager.h
 
-
-        ${STATES}/state_menu.cpp
-        ${STATES}/state_menu.h
-        ${STATES}/state_play.cpp
-        ${STATES}/state_play.h
-
-        ${STATES_VIEWS}/state_play_view.cpp
-        ${STATES_VIEWS}/state_play_view.h
-
         ${BOARD_LOGIC}/board.cpp
         ${BOARD_LOGIC}/board.h
         ${BOARD_LOGIC}/obstacles.cpp
         ${BOARD_LOGIC}/obstacles.h
         ${BOARD_LOGIC}/food.cpp
         ${BOARD_LOGIC}/food.h
-
         ${SNAKE_LOGIC}/snake.cpp
         ${SNAKE_LOGIC}/snake.h
+
+        ${STATES}/state_menu.cpp
+        ${STATES}/state_menu.h
+        ${STATES}/state_play.cpp
+        ${STATES}/state_play.h
+        ${STATES_VIEWS}/state_view_interface.h
+        ${STATES_VIEWS}/state_play_view.cpp
+        ${STATES_VIEWS}/state_play_view.h
+        ${VIEWS_TILES}/tile.cpp
+        ${VIEWS_TILES}/tile.h
 )
 
 add_executable(Snake_New ${SOURCE_FILES})
