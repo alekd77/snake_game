@@ -18,19 +18,13 @@ void StatePlayView::SetPermanentBoardTiles() {
     {
         for (int x = 0; x < this->boardModel.GetBoardWidth(); ++x)
         {
-            Tile tempBoardTile;
-            tempBoardTile.SetTileSize({30, 30});
-            tempBoardTile.SetTilePosition({x * 30, y * 30});
+            BoardFieldTile tempBoardTile(
+                    {30, 30},
+                    {x, y},
+                    this->texturesManager,
+                    this->boardModel.GetFieldInfo({x, y}));
 
-            if (this->boardModel.GetFieldInfo({x, y}) == 'W') {
-                tempBoardTile.SetTileTexture(
-                        this->texturesManager.GetTexturePtr(
-                                "obstacle_wall"));
-            } else {
-            tempBoardTile.SetTileTexture(
-                    this->texturesManager.GetTexturePtr(
-                            "board_grass"));
-            }
+            tempBoardTile.SetTileProperties();
 
             this->permanentBoardTiles.push_back(tempBoardTile);
         }
@@ -50,25 +44,19 @@ void StatePlayView::UpdateSnakeTiles() {
     this->snakeTiles.clear();
     bool isHead = true;
 
-    for (const auto& snakeIdx : this->snakeModel.GetSnakePos())
+    for (const auto& snakeBodyIdxPos : this->snakeModel.GetSnakePos())
     {
-        Tile snakeTile;
-        snakeTile.SetTileSize({30, 30});
-        snakeTile.SetTilePosition({snakeIdx.x * 30,
-                                   snakeIdx.y * 30});
+        SnakeBodyTile snakeBodyTile(
+                {30, 30},
+                snakeBodyIdxPos,
+                this->texturesManager,
+                isHead);
 
-        if (isHead) {
-            snakeTile.SetTileTexture(
-                    this->texturesManager.GetTexturePtr(
-                            "snake_head"));
-            isHead = false;
-        } else {
-            snakeTile.SetTileTexture(
-                    this->texturesManager.GetTexturePtr(
-                            "snake_body"));
-        }
+        snakeBodyTile.SetTileProperties();
 
-        this->snakeTiles.push_back(snakeTile);
+        this->snakeTiles.push_back(snakeBodyTile);
+
+        isHead = false;
     }
 }
 
@@ -85,12 +73,12 @@ void StatePlayView::DrawBackground() {
 
 void StatePlayView::DrawBoard() {
     for (const auto& permanentBoardTile : this->permanentBoardTiles)
-        this->renderWindow.draw(permanentBoardTile.GetTileRectRef());
+        this->renderWindow.draw(permanentBoardTile.GetTileRectangleRef());
 }
 
 void StatePlayView::DrawSnake() {
     for (const auto& snakeBodyTile : this->snakeTiles)
-        this->renderWindow.draw(snakeBodyTile.GetTileRectRef());
+        this->renderWindow.draw(snakeBodyTile.GetTileRectangleRef());
 }
 
 void StatePlayView::DrawHUD() {

@@ -12,7 +12,6 @@ private:
     Snake& snakeModel;
 
     std::vector<Tile> permanentBoardTiles;
-    std::vector<Tile> temporaryBoardTiles;
     std::vector<Tile> snakeTiles;
 
 public:
