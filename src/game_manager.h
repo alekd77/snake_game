@@ -5,7 +5,7 @@
 #include <queue>
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../assets_managers/assets_manager.h"
+#include "assets_manager.h"
 
 enum GameMode {GM_NONE, CAMPAIGN, ENDLESS, GM_DEBUG};
 enum DifficultyLevel {DL_NONE, EASY, NORMAL, HARD, DL_DEBUG};
@@ -24,10 +24,11 @@ private:
     int currentGameLevel;
     const int maxCampaignLevel = 10;
     sf::Time timePerLevel;
+    sf::Time currentLeftTime;
     double levelTargetPointsMultiplier;
     int leftLives;
     long long unsigned int currentScore;
-
+    long long unsigned int currentScoreLevelGoal;
     sf::RenderWindow gameWindow;
     AssetsManager assetsManager;
 
@@ -49,9 +50,11 @@ public:
     int GetCurrentGameLevel() const;
     int GetMaxCampaignLevel() const;
     sf::Time GetTimePerLevel() const;
+    sf::Time GetCurrentLeftTime() const;
     double GetLevelTargetPointsMultiplier() const;
     int GetLeftLives() const;
     long long unsigned int GetCurrentScore() const;
+    long long unsigned int GetCurrentScoreLevelGoal() const;
     sf::RenderWindow& GetWindowToRender();
     AssetsManager& GetAssetsManagerRef();
 
@@ -60,9 +63,11 @@ public:
     void SetGameStatus(GameStatus status);
     void SetCurrentGameLevel(int level);
     void SetTimePerLevel(sf::Time time);
+    void SetCurrentLeftTime(sf::Time time);
     void SetLevelTargetPointsMultiplier(double multiplier);
     void SetLeftLives(int lives);
-    void SetCurrentScore(int score);
+    void SetCurrentScore(long long unsigned int score);
+    void SetCurrentScoreLevelGoal(long long unsigned int score);
 
     void DisplayBasicGameInfo();
 

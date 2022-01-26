@@ -44,6 +44,7 @@ void GameManager::InitGameManagerSettings() {
     this->gameStatus = GS_NONE;
     this->currentGameLevel = 0;
     this->timePerLevel = sf::seconds(0);
+    this->currentLeftTime = sf::seconds(0);
     this->levelTargetPointsMultiplier = 0.0;
     this->leftLives = 0;
     this->currentScore = 0;
@@ -90,6 +91,10 @@ sf::Time GameManager::GetTimePerLevel() const {
     return this->timePerLevel;
 }
 
+sf::Time GameManager::GetCurrentLeftTime() const {
+    return this->currentLeftTime;
+}
+
 double GameManager::GetLevelTargetPointsMultiplier() const {
     return this->levelTargetPointsMultiplier;
 }
@@ -100,6 +105,10 @@ int GameManager::GetLeftLives() const {
 
 long long unsigned int GameManager::GetCurrentScore() const {
     return this->currentScore;
+}
+
+unsigned long long GameManager::GetCurrentScoreLevelGoal() const {
+    return this->currentScoreLevelGoal;
 }
 
 sf::RenderWindow& GameManager::GetWindowToRender() {
@@ -130,6 +139,10 @@ void GameManager::SetTimePerLevel(sf::Time time) {
     this->timePerLevel = time;
 }
 
+void GameManager::SetCurrentLeftTime(sf::Time time) {
+    this->currentLeftTime = time;
+}
+
 void GameManager::SetLevelTargetPointsMultiplier(double multiplier) {
     this->levelTargetPointsMultiplier = multiplier;
 }
@@ -138,8 +151,12 @@ void GameManager::SetLeftLives(int lives) {
     this->leftLives = lives;
 }
 
-void GameManager::SetCurrentScore(int score) {
+void GameManager::SetCurrentScore(long long unsigned int score) {
     this->currentScore = score;
+}
+
+void GameManager::SetCurrentScoreLevelGoal(unsigned long long score) {
+    this->currentScoreLevelGoal = score;
 }
 
 void GameManager::DisplayBasicGameInfo() {

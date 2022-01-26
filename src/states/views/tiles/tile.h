@@ -15,12 +15,12 @@ protected:
     sf::RectangleShape tileRectangle;
 public:
     Tile(sf::RenderWindow& window,
-         const sf::Vector2i& size,
-         const sf::Vector2i& pos);
+         sf::Vector2i size,
+         sf::Vector2i pos);
     Tile(sf::RenderWindow& window,
-         const sf::Vector2i& size,
-         const sf::Vector2i& pos,
-         const sf::Color& color);
+         sf::Vector2i size,
+         sf::Vector2i pos,
+         sf::Color color);
     ~Tile();
     virtual void SetTileProperties();
     virtual void Draw();
@@ -32,8 +32,8 @@ protected:
     TexturesManager& texturesManager;
 public:
     TexturedTile(sf::RenderWindow& window,
-                 const sf::Vector2i& size,
-                 const sf::Vector2i& pos,
+                 sf::Vector2i size,
+                 sf::Vector2i pos,
                  TexturesManager& texturesMgr);
     void SetTileTexture(const sf::Texture* texturePtr);
     virtual void AdjustTileTexture();
@@ -46,8 +46,8 @@ private:
     char boardFieldInfo;
 public:
     BoardFieldTile(sf::RenderWindow& window,
-                   const sf::Vector2i& size,
-                   const sf::Vector2i& tileGridBoardBasedPos,
+                   sf::Vector2i size,
+                   sf::Vector2i tileGridBoardBasedPos,
                    TexturesManager& texturesMgr,
                    char fieldInfo);
     void AdjustTileTexture() override;
@@ -59,8 +59,8 @@ private:
     bool isSnakeHead;
 public:
     SnakeBodyTile(sf::RenderWindow& window,
-                  const sf::Vector2i& size,
-                  const sf::Vector2i& tileGridBoardBasedPos,
+                  sf::Vector2i size,
+                  sf::Vector2i tileGridBoardBasedPos,
                   TexturesManager& texturesMgr,
                   bool isHead);
     void AdjustTileTexture() override;
@@ -76,12 +76,13 @@ protected:
     sf::Text tileText;
 public:
     InfoTile(sf::RenderWindow& window,
-             const sf::Vector2i& size,
-             const sf::Vector2i& pos,
-             const sf::Color& color,
+             sf::Vector2i size,
+             sf::Vector2i pos,
+             sf::Color color,
              FontsManager& fontsMgr,
              const std::string& info);
     virtual void AdjustTextFont();
+    void SetTextInfo(const std::string& info);
     void SetTileProperties() override;
     void Draw() override;
 };
@@ -96,11 +97,11 @@ protected:
     TexturesManager& texturesManager;
 public:
     HUDTile(sf::RenderWindow& window,
-            const sf::Vector2i& pos,
+            sf::Vector2i pos,
             FontsManager& fontsMgr,
             const std::string& info,
             TexturesManager& texturesMgr,
-            const HUDTileType& type);
+            HUDTileType type);
     void AdjustHUDSprite();
     void SetTileProperties() override;
     void Draw() override;

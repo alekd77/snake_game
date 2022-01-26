@@ -8,12 +8,15 @@ class StateViewInterface {
 protected:
     sf::RenderWindow& renderWindow;
     TexturesManager& texturesManager;
+    FontsManager& fontsManager;
 
 public:
     StateViewInterface(sf::RenderWindow& window,
-                       TexturesManager& texturesMgr)
+                       TexturesManager& texturesMgr,
+                       FontsManager& fontsMgr)
                        : renderWindow(window),
-                       texturesManager(texturesMgr) {}
+                       texturesManager(texturesMgr),
+                       fontsManager(fontsMgr) {}
     virtual ~StateViewInterface() = default;
 
     virtual void InitStateViewSettings() = 0;

@@ -8,28 +8,36 @@
 
 class StatePlayView : public StateViewInterface {
 private:
+    GameManager* gameManager;
     Board& boardModel;
     Snake& snakeModel;
-
-    std::vector<Tile> permanentBoardTiles;
-    std::vector<Tile> snakeTiles;
+    std::vector<Tile> permanentTiles;
+    std::vector<Tile> temporaryTiles;
+    std::map<std::string, HUDTile> hudTiles;
 
 public:
-    StatePlayView(sf::RenderWindow& window,
-                  TexturesManager& texturesMgr,
-                  Board& board, Snake& snake);
+    StatePlayView(GameManager* gameMgr,
+                  Board& board,
+                  Snake& snake);
 
+    std::string GetHUDTileLeftTimeInfo() const;
+    std::string GetHUDTileLeftLivesInfo() const;
+    std::string GetHUDTileCurrentScoreInfo() const;
+    std::string GetHUDTileScoreLevelGoalInfo() const;
+
+    void SetPermanentTiles();
+    void InitHUDTilesSettings();
     void InitStateViewSettings() override;
-    void SetPermanentBoardTiles();
 
-    void UpdateStateView() override;
-    void UpdateTemporaryBoardTiles();
+    void UpdateBoardTiles();
     void UpdateSnakeTiles();
+    void UpdateTemporaryTiles();
+    void UpdateHUD();
+    void UpdateStateView() override;
 
-    void DrawStateView() override;
     void DrawBackground();
-    void DrawBoard();
-    void DrawSnake();
+    void DrawTiles();
     void DrawHUD();
+    void DrawStateView() override;
 };
 #endif //MAIN_CPP_STATE_PLAY_VIEW_H

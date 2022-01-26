@@ -3,12 +3,9 @@
 
 StatePlay::StatePlay(GameManager* manager) : StateInterface(manager),
                 board(*manager), snake(*manager),
-                view(this->gameManager->GetWindowToRender(),
-                     this->gameManager->GetAssetsManagerRef()
-                        .GetTexturesManagerRef(),
-                     this->board, this->snake) {
-    this->scoreLevelGoal = 0;
-}
+                view(this->gameManager,
+                     this->board,
+                     this->snake) {}
 
 bool StatePlay::IsLevelFinished() {
     if (this->gameManager->GetGameStatus() == FINISHED_LOSS)
@@ -29,34 +26,30 @@ void StatePlay::InitStateSettings() {
     this->gameManager->SetGameStatus(PAUSED);
     this->gameManager->SetCurrentGameLevel(
             this->gameManager->GetCurrentGameLevel() + 1);
+    this->gameManager->SetCurrentLeftTime(
+            this->gameManager->GetTimePerLevel());
+    SetScoreGoalPerLevel();
     this->board.InitLevelSettings();
     this->snake.InitLevelSettings();
     this->view.InitStateViewSettings();
-    SetScoreGoalPerLevel();
 }
 
 void StatePlay::SetScoreGoalPerLevel() {
-    this->scoreLevelGoal = this->gameManager->GetCurrentScore() +
-                           this->gameManager->GetCurrentGameLevel() * 40;
+    this->gameManager->SetCurrentScoreLevelGoal(
+            this->gameManager->GetCurrentScore() +
+                    this->gameManager->GetCurrentGameLevel() * 40);
 }
 
 void StatePlay::HandleInput() {
 
 }
 
-void StatePlay::Update(sf::Time deltaTime) {
-    std::cout << "\nPlay state...\n";
-
-    UpdateGameStatus();
-    UpdateLeftLives();
-    UpdateBoard();
-    //UpdateSnake();
-    //UpdateCollision();
-    UpdateView();
-
-    if (IsLevelFinished())
-        ExitStateSettings();
+void StatePlay::UpdateGameStatus() {
+    if (this->gameManager->GetLeftLives() < 1)
+        this->gameManager->SetGameStatus(FINISHED_LOSS);
 }
+
+void StatePlay::UpdateLeftTime() {}
 
 void StatePlay::UpdateLeftLives() {
     if (this->snake.GetCurrentHealth() > 0)
@@ -69,15 +62,10 @@ void StatePlay::UpdateLeftLives() {
 
 void StatePlay::UpdateExitLevelField() {
     if (this->gameManager->GetCurrentScore() <
-        this->scoreLevelGoal)
+            this->gameManager->GetCurrentScoreLevelGoal())
         return;
 
     this->board.SetExitFieldEnable();
-}
-
-void StatePlay::UpdateGameStatus() {
-    if (this->gameManager->GetLeftLives() < 1)
-        this->gameManager->SetGameStatus(FINISHED_LOSS);
 }
 
 void StatePlay::UpdateBoard() {
@@ -100,6 +88,23 @@ void StatePlay::UpdateCollision() {
 
 void StatePlay::UpdateView() {
     this->view.UpdateStateView();
+}
+
+void StatePlay::Update(sf::Time deltaTime) {
+    if (this->gameManager->GetGameStatus() != RUNNING)
+        return;
+
+    std::cout << "\nPlay state...\n";
+
+    UpdateGameStatus();
+    UpdateLeftLives();
+    UpdateBoard();
+    //UpdateSnake();
+    //UpdateCollision();
+    UpdateView();
+
+    if (IsLevelFinished())
+        ExitStateSettings();
 }
 
 void StatePlay::Draw(sf::Time deltaTime) {

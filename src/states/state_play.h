@@ -10,26 +10,25 @@ private:
     Snake snake;
     StatePlayView view;
 
-    long long unsigned int scoreLevelGoal;
-
 public:
     explicit StatePlay(GameManager* manager);
 
     bool IsLevelFinished();
 
-    void InitStateSettings() override;
     void SetScoreGoalPerLevel();
+    void InitStateSettings() override;
 
     void HandleInput() override;
 
-    void Update(sf::Time deltaTime) override;
+    void UpdateGameStatus();
+    void UpdateLeftTime();
     void UpdateLeftLives();
     void UpdateExitLevelField();
-    void UpdateGameStatus();
     void UpdateBoard();
     void UpdateSnake();
     void UpdateCollision();
     void UpdateView();
+    void Update(sf::Time deltaTime) override;
 
     void Draw(sf::Time deltaTime) override;
 

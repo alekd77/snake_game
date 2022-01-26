@@ -1,8 +1,8 @@
 #include "tile.h"
 
 Tile::Tile(sf::RenderWindow& window,
-           const sf::Vector2i& size,
-           const sf::Vector2i& pos)
+           sf::Vector2i size,
+           sf::Vector2i pos)
            : renderWindow(window) {
     this->tileSize = size;
     this->tilePixelPosition = pos;
@@ -10,9 +10,9 @@ Tile::Tile(sf::RenderWindow& window,
 }
 
 Tile::Tile(sf::RenderWindow& window,
-           const sf::Vector2i& size,
-           const sf::Vector2i& pos,
-           const sf::Color& color)
+           sf::Vector2i size,
+           sf::Vector2i pos,
+           sf::Color color)
            : renderWindow(window) {
     this->tileSize = size;
     this->tilePixelPosition = pos;
@@ -35,8 +35,8 @@ void Tile::Draw() {
 
 
 TexturedTile::TexturedTile(sf::RenderWindow& window,
-                           const sf::Vector2i& size,
-                           const sf::Vector2i& pos,
+                           sf::Vector2i size,
+                           sf::Vector2i pos,
                            TexturesManager& texturesMgr)
                            : Tile(window, size, pos),
                            texturesManager(texturesMgr) {}
@@ -54,8 +54,8 @@ void TexturedTile::SetTileProperties() {
 
 
 BoardFieldTile::BoardFieldTile(sf::RenderWindow& window,
-                               const sf::Vector2i& size,
-                               const sf::Vector2i& tileGridBoardBasedPos,
+                               sf::Vector2i size,
+                               sf::Vector2i tileGridBoardBasedPos,
                                TexturesManager& texturesMgr,
                                char fieldInfo)
                                : TexturedTile(window, size,
@@ -144,8 +144,8 @@ void BoardFieldTile::AdjustTileTexture() {
 
 
 SnakeBodyTile::SnakeBodyTile(sf::RenderWindow& window,
-                             const sf::Vector2i& size,
-                             const sf::Vector2i& tileGridBoardBasedPos,
+                             sf::Vector2i size,
+                             sf::Vector2i tileGridBoardBasedPos,
                              TexturesManager& texturesMgr,
                              bool isHead)
                              : TexturedTile(window, size,
@@ -170,9 +170,9 @@ void SnakeBodyTile::AdjustTileTexture() {
 
 
 InfoTile::InfoTile(sf::RenderWindow& window,
-                   const sf::Vector2i& size,
-                   const sf::Vector2i& pos,
-                   const sf::Color& color,
+                   sf::Vector2i size,
+                   sf::Vector2i pos,
+                   sf::Color color,
                    FontsManager& fontsMgr,
                    const std::string& info)
                    : Tile(window, size,
@@ -186,13 +186,17 @@ void InfoTile::AdjustTextFont() {
             "comfortaa_regular");
 }
 
+void InfoTile::SetTextInfo(const std::string& info) {
+    this->tileText.setString(info);
+}
+
 void InfoTile::SetTileProperties() {
     Tile::SetTileProperties();
     this->tileText.setPosition(
             {this->tileRectangle.getGlobalBounds().left + 40,
              this->tileRectangle.getGlobalBounds().top + 40});
     this->tileText.setString(this->tileTextInfo);
-    this->tileText.setFillColor(sf::Color::Green);
+    this->tileText.setFillColor(sf::Color::Black);
     AdjustTextFont();
     this->tileText.setFont(this->tileTextFont);
 }
@@ -203,13 +207,13 @@ void InfoTile::Draw() {
 }
 
 HUDTile::HUDTile(sf::RenderWindow& window,
-                 const sf::Vector2i& pos,
+                 sf::Vector2i pos,
                  FontsManager& fontsMgr,
                  const std::string& info,
                  TexturesManager& texturesMgr,
-                 const HUDTileType& type)
-                 : InfoTile(window,{200, 100},
-                            pos, sf::Color::Yellow,
+                 HUDTileType type)
+                 : InfoTile(window,{200, 80},
+                            pos, sf::Color::Green,
                             fontsMgr, info),
                             texturesManager(texturesMgr) {
     this->hudTileType = type;
