@@ -1,7 +1,7 @@
 #include "textures_manager.h"
-#include "experimental/filesystem"
 #include <iostream>
 #include <cstring>
+#include "experimental/filesystem"
 
 TexturesManager::TexturesManager() = default;
 

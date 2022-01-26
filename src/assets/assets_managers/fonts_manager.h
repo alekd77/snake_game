@@ -11,7 +11,11 @@ private:
 
 public:
     FontsManager();
-
+    const std::map<std::string, sf::Font>& GetFontsMap() const;
+    const sf::Font& GetFontRef(
+            const std::string& fontName) const;
+    void AddFontToMap(const std::string& fontName,
+                      const std::string& fileName);
     void LoadFonts();
 };
 
