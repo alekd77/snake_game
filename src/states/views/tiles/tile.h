@@ -3,24 +3,27 @@
 
 #include "SFML/Graphics.hpp"
 #include "textures_manager.h"
+#include "fonts_manager.h"
 
 class Tile {
 private:
     sf::Vector2i tileSize;
-    sf::Vector2i tileGridBoardBasedPosition;
     sf::Vector2i tilePixelPosition;
+    sf::Color tileFillColor;
 protected:
+    sf::RenderWindow& renderWindow;
     sf::RectangleShape tileRectangle;
 public:
-    Tile(const sf::Vector2i& size,
+    Tile(sf::RenderWindow& window,
+         const sf::Vector2i& size,
          const sf::Vector2i& pos);
+    Tile(sf::RenderWindow& window,
+         const sf::Vector2i& size,
+         const sf::Vector2i& pos,
+         const sf::Color& color);
     ~Tile();
-    const sf::RectangleShape& GetTileRectangleRef() const;
-    const sf::Vector2i& GetTileSize() const;
-    const sf::Vector2i& GetTileGridBoardBasedPosition() const;
-    const sf::Vector2i& GetTilePixelPosition() const;
-    void SetTileFillColor(const sf::Color& color);
     virtual void SetTileProperties();
+    virtual void Draw();
 };
 
 
@@ -28,7 +31,8 @@ class TexturedTile : public Tile {
 protected:
     TexturesManager& texturesManager;
 public:
-    TexturedTile(const sf::Vector2i& size,
+    TexturedTile(sf::RenderWindow& window,
+                 const sf::Vector2i& size,
                  const sf::Vector2i& pos,
                  TexturesManager& texturesMgr);
     void SetTileTexture(const sf::Texture* texturePtr);
@@ -41,8 +45,9 @@ class BoardFieldTile : public TexturedTile {
 private:
     char boardFieldInfo;
 public:
-    BoardFieldTile(const sf::Vector2i& size,
-                   const sf::Vector2i& pos,
+    BoardFieldTile(sf::RenderWindow& window,
+                   const sf::Vector2i& size,
+                   const sf::Vector2i& tileGridBoardBasedPos,
                    TexturesManager& texturesMgr,
                    char fieldInfo);
     void AdjustTileTexture() override;
@@ -53,28 +58,55 @@ class SnakeBodyTile : public TexturedTile {
 private:
     bool isSnakeHead;
 public:
-    SnakeBodyTile(const sf::Vector2i& size,
-                  const sf::Vector2i& pos,
+    SnakeBodyTile(sf::RenderWindow& window,
+                  const sf::Vector2i& size,
+                  const sf::Vector2i& tileGridBoardBasedPos,
                   TexturesManager& texturesMgr,
                   bool isHead);
     void AdjustTileTexture() override;
 };
 
-//class InfoTile : public Tile {
-//private:
-//    std::string text;
-//    sf::Font font;
-//public:
-//    InfoTile() = default;
-//};
-//
-//class HUDTile : public InfoTile {
-//private:
-//    sf::Sprite hudSprite;
-//
-//};
-//
-//class Button : public InfoTile {
-//
-//};
+
+class InfoTile : public Tile {
+private:
+    std::string tileTextInfo;
+    sf::Font tileTextFont;
+protected:
+    FontsManager& fontsManager;
+    sf::Text tileText;
+public:
+    InfoTile(sf::RenderWindow& window,
+             const sf::Vector2i& size,
+             const sf::Vector2i& pos,
+             const sf::Color& color,
+             FontsManager& fontsMgr,
+             const std::string& info);
+    virtual void AdjustTextFont();
+    void SetTileProperties() override;
+    void Draw() override;
+};
+
+enum HUDTileType {TIME, LIVES, SCORE};
+
+class HUDTile : public InfoTile {
+private:
+    HUDTileType hudTileType;
+    sf::Sprite hudTileSprite;
+protected:
+    TexturesManager& texturesManager;
+public:
+    HUDTile(sf::RenderWindow& window,
+            const sf::Vector2i& pos,
+            FontsManager& fontsMgr,
+            const std::string& info,
+            TexturesManager& texturesMgr,
+            const HUDTileType& type);
+    void AdjustHUDSprite();
+    void SetTileProperties() override;
+    void Draw() override;
+};
+
+class Button : public InfoTile {
+
+};
 #endif //MAIN_CPP_TILE_H

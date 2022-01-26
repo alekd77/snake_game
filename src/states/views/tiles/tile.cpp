@@ -1,48 +1,44 @@
 #include "tile.h"
 
-Tile::Tile(const sf::Vector2i& size,
-           const sf::Vector2i& pos) {
+Tile::Tile(sf::RenderWindow& window,
+           const sf::Vector2i& size,
+           const sf::Vector2i& pos)
+           : renderWindow(window) {
     this->tileSize = size;
-    this->tileGridBoardBasedPosition = pos;
-    this->tilePixelPosition = {
-            this->tileGridBoardBasedPosition.x * this->tileSize.x,
-            this->tileGridBoardBasedPosition.y * this->tileSize.y};
+    this->tilePixelPosition = pos;
+    this->tileFillColor = {250, 255, 240, 255};
+}
+
+Tile::Tile(sf::RenderWindow& window,
+           const sf::Vector2i& size,
+           const sf::Vector2i& pos,
+           const sf::Color& color)
+           : renderWindow(window) {
+    this->tileSize = size;
+    this->tilePixelPosition = pos;
+    this->tileFillColor = color;
 }
 
 Tile::~Tile() = default;
-
-const sf::RectangleShape& Tile::GetTileRectangleRef() const {
-    return this->tileRectangle;
-}
-
-const sf::Vector2i& Tile::GetTileSize() const {
-    return this->tileSize;
-}
-
-const sf::Vector2i& Tile::GetTileGridBoardBasedPosition() const {
-    return this->tileGridBoardBasedPosition;
-}
-
-const sf::Vector2i& Tile::GetTilePixelPosition() const {
-    return this->tilePixelPosition;
-}
-
-void Tile::SetTileFillColor(const sf::Color& color) {
-    this->tileRectangle.setFillColor(color);
-}
 
 void Tile::SetTileProperties() {
     this->tileRectangle.setSize(
             static_cast<sf::Vector2f>(this->tileSize));
     this->tileRectangle.setPosition(
             static_cast<sf::Vector2f>(this->tilePixelPosition));
+    this->tileRectangle.setFillColor(this->tileFillColor);
+}
+
+void Tile::Draw() {
+    this->renderWindow.draw(this->tileRectangle);
 }
 
 
-TexturedTile::TexturedTile(const sf::Vector2i& size,
+TexturedTile::TexturedTile(sf::RenderWindow& window,
+                           const sf::Vector2i& size,
                            const sf::Vector2i& pos,
                            TexturesManager& texturesMgr)
-                           : Tile(size, pos),
+                           : Tile(window, size, pos),
                            texturesManager(texturesMgr) {}
 
 void TexturedTile::SetTileTexture(const sf::Texture* texturePtr) {
@@ -57,13 +53,15 @@ void TexturedTile::SetTileProperties() {
 }
 
 
-BoardFieldTile::BoardFieldTile(const sf::Vector2i& size,
-                               const sf::Vector2i& pos,
+BoardFieldTile::BoardFieldTile(sf::RenderWindow& window,
+                               const sf::Vector2i& size,
+                               const sf::Vector2i& tileGridBoardBasedPos,
                                TexturesManager& texturesMgr,
                                char fieldInfo)
-                               : TexturedTile(
-                                       size, pos,
-                                       texturesMgr) {
+                               : TexturedTile(window, size,
+                               {tileGridBoardBasedPos.x * size.x,
+                                tileGridBoardBasedPos.y * size.y},
+                               texturesMgr) {
     this->boardFieldInfo = fieldInfo;
 }
 
@@ -144,13 +142,16 @@ void BoardFieldTile::AdjustTileTexture() {
     }
 }
 
-SnakeBodyTile::SnakeBodyTile(const sf::Vector2i& size,
-                             const sf::Vector2i& pos,
+
+SnakeBodyTile::SnakeBodyTile(sf::RenderWindow& window,
+                             const sf::Vector2i& size,
+                             const sf::Vector2i& tileGridBoardBasedPos,
                              TexturesManager& texturesMgr,
                              bool isHead)
-                             : TexturedTile(
-                                     size, pos,
-                                     texturesMgr) {
+                             : TexturedTile(window, size,
+                             {tileGridBoardBasedPos.x * size.x,
+                              tileGridBoardBasedPos.y * size.y},
+                              texturesMgr) {
     this->isSnakeHead = isHead;
 }
 
@@ -167,3 +168,87 @@ void SnakeBodyTile::AdjustTileTexture() {
                     GetTexturePtr("snake_body"));
 }
 
+
+InfoTile::InfoTile(sf::RenderWindow& window,
+                   const sf::Vector2i& size,
+                   const sf::Vector2i& pos,
+                   const sf::Color& color,
+                   FontsManager& fontsMgr,
+                   const std::string& info)
+                   : Tile(window, size,
+                          pos, color),
+                   fontsManager(fontsMgr) {
+    this->tileTextInfo = info;
+}
+
+void InfoTile::AdjustTextFont() {
+    this->tileTextFont = this->fontsManager.GetFontRef(
+            "comfortaa_regular");
+}
+
+void InfoTile::SetTileProperties() {
+    Tile::SetTileProperties();
+    this->tileText.setPosition(
+            {this->tileRectangle.getGlobalBounds().left + 40,
+             this->tileRectangle.getGlobalBounds().top + 40});
+    this->tileText.setString(this->tileTextInfo);
+    this->tileText.setFillColor(sf::Color::Green);
+    AdjustTextFont();
+    this->tileText.setFont(this->tileTextFont);
+}
+
+void InfoTile::Draw() {
+    this->renderWindow.draw(this->tileRectangle);
+    this->renderWindow.draw(this->tileText);
+}
+
+HUDTile::HUDTile(sf::RenderWindow& window,
+                 const sf::Vector2i& pos,
+                 FontsManager& fontsMgr,
+                 const std::string& info,
+                 TexturesManager& texturesMgr,
+                 const HUDTileType& type)
+                 : InfoTile(window,{200, 100},
+                            pos, sf::Color::Yellow,
+                            fontsMgr, info),
+                            texturesManager(texturesMgr) {
+    this->hudTileType = type;
+}
+
+void HUDTile::AdjustHUDSprite() {
+    if (this->hudTileType == TIME) {
+        this->hudTileSprite.setTexture(
+                this->texturesManager.GetTextureRef(
+                        "hud_clock"));
+        return;
+    }
+
+    if (this->hudTileType == LIVES) {
+        this->hudTileSprite.setTexture(
+                this->texturesManager.GetTextureRef(
+                        "hud_heart"));
+        return;
+    }
+
+    this->hudTileSprite.setTexture(
+            this->texturesManager.GetTextureRef(
+                    "hud_coin"));
+}
+
+void HUDTile::SetTileProperties() {
+    InfoTile::SetTileProperties();
+    AdjustHUDSprite();
+    this->hudTileSprite.setPosition(
+            this->tileRectangle.getGlobalBounds().left + 10,
+            this->tileRectangle.getGlobalBounds().top + 10);
+    this->tileText.setPosition(
+            {this->hudTileSprite.getPosition().x
+                + this->hudTileSprite.getGlobalBounds().width + 10,
+             this->hudTileSprite.getPosition().y});
+}
+
+void HUDTile::Draw() {
+    this->renderWindow.draw(this->tileRectangle);
+    this->renderWindow.draw(this->hudTileSprite);
+    this->renderWindow.draw(this->tileText);
+}
