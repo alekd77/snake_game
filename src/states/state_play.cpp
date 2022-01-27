@@ -72,8 +72,8 @@ void StatePlay::UpdateBoard() {
     UpdateExitLevelField();
 }
 
-void StatePlay::UpdateSnake() {
-    this->snake.Update();
+void StatePlay::UpdateSnake(sf::Time deltaTime) {
+    this->snake.Update(deltaTime);
 }
 
 void StatePlay::UpdateCollision() {
@@ -99,7 +99,7 @@ void StatePlay::Update(sf::Time deltaTime) {
     UpdateGameStatus();
     UpdateLeftLives();
     UpdateBoard();
-    //UpdateSnake();
+    UpdateSnake(deltaTime);
     //UpdateCollision();
     UpdateView();
 

@@ -1,8 +1,9 @@
 #include "snake.h"
+#include <cmath>
 #include <iostream>
 
 Snake::Snake(GameManager& manager) : gameManager(manager) {
-    this->currentVelocity = 0;
+    this->currentVelocity = 0.0;
     this->currentHealth = 0;
 }
 
@@ -14,7 +15,7 @@ sf::Vector2i Snake::GetCurrentSnakeHeadPos() const {
     return this->snakePos.front();
 }
 
-int Snake::GetCurrentVelocity() const {
+float Snake::GetCurrentVelocity() const {
     return this->currentVelocity;
 }
 
@@ -22,8 +23,15 @@ int Snake::GetCurrentHealth() const {
     return this->currentHealth;
 }
 
+bool Snake::IsSnakeAlive() const {
+    if (this->currentHealth > 0)
+        return true;
+
+    return false;
+}
+
 void Snake::InitLevelSettings() {
-    this->currentVelocity = 10;
+    this->currentVelocity = 1.0;
     this->currentHealth = 100;
     SetInitSnakePos();
     SetInitDirection();
@@ -31,6 +39,9 @@ void Snake::InitLevelSettings() {
 
 void Snake::SetInitSnakePos() {
     if (this->gameManager.GetGameMode() == CAMPAIGN) {
+        this->tempSnakePos.push_front({1, 1});
+        this->tempSnakePos.push_front({2, 1});
+        this->tempSnakePos.push_front({3, 1});
         this->snakePos.push_front({1, 1});
         this->snakePos.push_front({2, 1});
         this->snakePos.push_front({3, 1});
@@ -39,62 +50,100 @@ void Snake::SetInitSnakePos() {
 
 void Snake::SetInitDirection() {
     if (this->gameManager.GetGameMode() == CAMPAIGN)
-        this->currentDirection = {1, 0};
+        this->currentDirection = {0, 1};
 }
 
-void Snake::SetCurrentVelocity(bool subtract, int velocity) {
-    if (this->currentVelocity <= 5 or
-            this->currentVelocity >= 15)
-        return;
+void Snake::SetCurrentVelocity(float velocity) {
+    this->currentVelocity = velocity;
 
-    if (subtract)
-        this->currentVelocity -= velocity;
-
-    this->currentVelocity += velocity;
 }
 
-void Snake::SetCurrentHealth(bool subtract, int health) {
-    if (this->currentHealth <= 0 or
-        this->currentHealth >= 100)
-        return;
-
-    if (subtract)
-        this->currentHealth -= health;
-
-    this->currentHealth += health;
+void Snake::SetCurrentHealth(int health) {
+    this->currentHealth = health;
 }
 
-void Snake::Move() {
-    this->snakePos.push_front({
-            this->snakePos.front().x + currentDirection.first,
-            this->snakePos.front().y + currentDirection.second});
+sf::Vector2f Snake::GetDistanceCoveredBetweenFrames(
+        sf::Time deltaTime) const {
+    return {static_cast<float>(this->currentDirection.first) *
+                    this->currentVelocity * deltaTime.asSeconds(),
+            static_cast<float>(this->currentDirection.second) *
+                    this->currentVelocity * deltaTime.asSeconds()};
+}
+
+void Snake::UpdateTemporaryGridBasedPos(sf::Time deltaTime) {
+    sf::Vector2f tempPos(this->tempSnakePos.front().x,
+                         this->tempSnakePos.front().y);
+
+    tempPos += GetDistanceCoveredBetweenFrames(deltaTime);
+
+    this->tempSnakePos.push_front(tempPos);
+    this->tempSnakePos.pop_back();
+}
+
+bool Snake::IsPosUpdateAvailable() const {
+    /* returns true if snake head temp pos
+     is different than the next body part pos */
+
+    if (std::floor(this->tempSnakePos.front().x) -
+            std::floor(this->tempSnakePos[1].x) > 0)
+        return true;
+
+    if (std::floor(this->tempSnakePos.front().y) -
+            std::floor(this->tempSnakePos[1].y) > 0)
+        return true;
+
+    return false;
+}
+
+void Snake::UpdatePos() {
+    sf::Vector2i newPos(
+            std::floor(this->tempSnakePos.front().x),
+            std::floor(this->tempSnakePos.front().y));
+
+    this->snakePos.push_front(newPos);
     this->snakePos.pop_back();
 }
 
-void Snake::Turn(std::pair<int, int> direction) {
+void Snake::Move(sf::Time deltaTime) {
+    UpdateTemporaryGridBasedPos(deltaTime);
+
+    if (IsPosUpdateAvailable())
+        UpdatePos();
+}
+
+bool Snake::IsTurnAvailable(std::pair<int, int> direction) const {
     // direction interval can only be set as -1 <= x <= 1
     if (direction.first < -1 or direction.first > 1)
-        return;
+        return false;
 
     if (direction.second < -1 or direction.second > 1)
-        return;
+        return false;
+
 
     // disable turning diagonally
     if (direction.first != 0 and direction.second != 0)
-        return;
+        return false;
+
 
     // disable turning on a dime
     if (direction.first == -1 * currentDirection.first)
-        return;
+        return false;
 
     if (direction.second == -1 * currentDirection.second)
+        return false;
+
+    return true;
+}
+
+void Snake::Turn(std::pair<int, int> direction) {
+    if (!IsTurnAvailable(direction))
         return;
 
     this->currentDirection = direction;
 }
 
-void Snake::Update() {
-    Move();
+void Snake::Update(sf::Time deltaTime) {
+    Move(deltaTime);
 }
 
 void Snake::DebugDisplay(int width, int height) {

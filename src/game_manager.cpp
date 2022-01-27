@@ -2,6 +2,7 @@
 #include "states/state_menu.h"
 #include <iostream>
 #include <string>
+#include <cmath>
 
 GameManager::GameManager(bool debug) {
     this->isDebug = debug;

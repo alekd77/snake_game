@@ -25,7 +25,7 @@ public:
     void UpdateLeftLives();
     void UpdateExitLevelField();
     void UpdateBoard();
-    void UpdateSnake();
+    void UpdateSnake(sf::Time deltaTime);
     void UpdateCollision();
     void UpdateView();
     void Update(sf::Time deltaTime) override;

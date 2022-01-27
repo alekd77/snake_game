@@ -1,7 +1,6 @@
 #include "src/game_manager.h"
 
-int main()
-{
+int main() {
     GameManager manager(true);
     manager.MainGameLoop();
 
