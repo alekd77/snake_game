@@ -2,7 +2,7 @@
 #define MAIN_CPP_STATE_PLAY_INPUT_HANDLING_H
 
 #include "input_handling_interface.h"
-#include "snake.h"
+#include "snake/snake.h"
 
 class StatePlayInputHandling
         : public InputHandlingInterface {

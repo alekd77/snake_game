@@ -21,26 +21,38 @@ find_package(SFML 2 COMPONENTS graphics audio REQUIRED)
 set(ASSETS src/assets/assets_managers)
 include_directories(${ASSETS})
 
-#LOGIC
-set(BOARD_LOGIC src/game_logic/board)
-include_directories(${BOARD_LOGIC})
-set(SNAKE_LOGIC src/game_logic/snake)
-include_directories(${SNAKE_LOGIC})
 
 #STATES
 set(STATES src/states)
 include_directories(${STATES})
 
-#STATES_VIEWS
-set(STATES_VIEWS src/states/views)
-include_directories(${STATES_VIEWS})
-#VIEWS_TILES
-set(VIEWS_TILES src/states/views/tiles)
-include_directories(${VIEWS_TILES})
 
-#INPUT_HANDLING
-set(INPUT_HANDLING src/states/input)
-include_directories(${INPUT_HANDLING})
+#STATE_INTERFACE
+set(STATE_INTERFACE ${STATES}/state_interface)
+include_directories(${STATE_INTERFACE})
+
+#STATE_INPUT_INTERFACE
+set(STATE_INPUT_INTERFACE ${STATE_INTERFACE}/input)
+include_directories(${STATE_INPUT_INTERFACE})
+
+#STATE_VIEW_INTERFACE
+set(STATE_VIEW_INTERFACE ${STATE_INTERFACE}/views)
+include_directories(${STATE_VIEW_INTERFACE})
+
+
+#STATE_MENU
+set(STATE_MENU ${STATES}/state_menu)
+include_directories(${STATE_MENU})
+
+
+#STATE_PLAY
+set(STATE_PLAY ${STATES}/state_play)
+include_directories(${STATE_PLAY})
+
+#STATE_PLAY_GAME_LOGIC
+set(STATE_PLAY_GAME_LOGIC ${STATE_PLAY}/game_logic)
+include_directories(${STATE_PLAY_GAME_LOGIC})
+
 
 set(SOURCE_FILES
 
@@ -57,28 +69,30 @@ set(SOURCE_FILES
         ${ASSETS}/fonts_manager.cpp
         ${ASSETS}/fonts_manager.h
 
-        ${BOARD_LOGIC}/board.cpp
-        ${BOARD_LOGIC}/board.h
-        ${BOARD_LOGIC}/obstacles.cpp
-        ${BOARD_LOGIC}/obstacles.h
-        ${BOARD_LOGIC}/food.cpp
-        ${BOARD_LOGIC}/food.h
-        ${SNAKE_LOGIC}/snake.cpp
-        ${SNAKE_LOGIC}/snake.h
+        ${STATE_INTERFACE}/state_interface.h
+        ${STATE_INPUT_INTERFACE}/input_handling_interface.cpp
+        ${STATE_INPUT_INTERFACE}/input_handling_interface.h
+        ${STATE_VIEW_INTERFACE}/state_view_interface.h
+        ${STATE_VIEW_INTERFACE}/tiles/tile.cpp
+        ${STATE_VIEW_INTERFACE}/tiles/tile.h
 
-        ${STATES}/state_menu.cpp
-        ${STATES}/state_menu.h
-        ${STATES}/state_play.cpp
-        ${STATES}/state_play.h
-        ${STATES_VIEWS}/state_view_interface.h
-        ${STATES_VIEWS}/state_play_view.cpp
-        ${STATES_VIEWS}/state_play_view.h
-        ${VIEWS_TILES}/tile.cpp
-        ${VIEWS_TILES}/tile.h
-        ${INPUT_HANDLING}/input_handling_interface.cpp
-        ${INPUT_HANDLING}/input_handling_interface.h
-        ${INPUT_HANDLING}/state_play_input_handling.cpp
-        ${INPUT_HANDLING}/state_play_input_handling.h
+        ${STATE_MENU}/state_menu.cpp
+        ${STATE_MENU}/state_menu.h
+
+        ${STATE_PLAY}/state_play.cpp
+        ${STATE_PLAY}/state_play.h
+        ${STATE_PLAY}/state_play_input_handling.cpp
+        ${STATE_PLAY}/state_play_input_handling.h
+        ${STATE_PLAY}/state_play_view.cpp
+        ${STATE_PLAY}/state_play_view.h
+        ${STATE_PLAY_GAME_LOGIC}/board/board.cpp
+        ${STATE_PLAY_GAME_LOGIC}/board/board.h
+        ${STATE_PLAY_GAME_LOGIC}/board/food.cpp
+        ${STATE_PLAY_GAME_LOGIC}/board/food.h
+        ${STATE_PLAY_GAME_LOGIC}/board/obstacles.cpp
+        ${STATE_PLAY_GAME_LOGIC}/board/obstacles.h
+        ${STATE_PLAY_GAME_LOGIC}/snake/snake.cpp
+        ${STATE_PLAY_GAME_LOGIC}/snake/snake.h
 )
 
 add_executable(Snake_New ${SOURCE_FILES})

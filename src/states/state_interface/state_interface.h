@@ -1,7 +1,7 @@
 #ifndef SNAKE_NEW_STATE_INTERFACE_H
 #define SNAKE_NEW_STATE_INTERFACE_H
 
-#include "../game_manager.h"
+#include "../../game_manager.h"
 
 class StateInterface {
 protected:

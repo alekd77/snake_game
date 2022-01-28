@@ -2,9 +2,9 @@
 #define MAIN_CPP_STATE_PLAY_VIEW_H
 
 #include "state_view_interface.h"
-#include "board.h"
-#include "snake.h"
-#include "tile.h"
+#include "board/board.h"
+#include "snake/snake.h"
+#include "tiles/tile.h"
 
 class StatePlayView : public StateViewInterface {
 private:

@@ -1,5 +1,5 @@
 #include "state_menu.h"
-#include "state_play.h"
+#include "state_play/state_play.h"
 #include <iostream>
 
 StateMenu::StateMenu(GameManager* manager)

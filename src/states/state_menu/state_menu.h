@@ -1,7 +1,7 @@
 #ifndef SNAKE_NEW_STATE_MENU_H
 #define SNAKE_NEW_STATE_MENU_H
 
-#include "state_interface.h"
+#include "state_interface/state_interface.h"
 
 class StateMenu : public StateInterface {
 public:

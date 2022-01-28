@@ -1,7 +1,7 @@
 #ifndef MAIN_CPP_STATE_PLAY_H
 #define MAIN_CPP_STATE_PLAY_H
 
-#include "state_interface.h"
+#include "state_interface/state_interface.h"
 #include "state_play_view.h"
 #include "state_play_input_handling.h"
 
