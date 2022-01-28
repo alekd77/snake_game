@@ -57,6 +57,7 @@ void StateMenu::DebugInitSettings() {
 void StateMenu::LoadLevelsSettings() {
     DifficultyLevelBasedSettings();
     GameModeBasedSettings();
+    this->gameManager->SetCurrentGameLevel(1);
     this->gameManager->SetCurrentScore(0);
 }
 

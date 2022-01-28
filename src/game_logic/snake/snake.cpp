@@ -3,6 +3,7 @@
 #include <iostream>
 
 Snake::Snake(GameManager& manager) : gameManager(manager) {
+    this->currentDirection = {0, 0};
     this->currentVelocity = 0.0;
     this->currentHealth = 0;
 }

@@ -234,6 +234,9 @@ void HUDTile::AdjustHUDSprite() {
         return;
     }
 
+    if (this->hudTileType == LEVEL)
+        return;
+
     this->hudTileSprite.setTexture(
             this->texturesManager.GetTextureRef(
                     "hud_coin"));

@@ -12,6 +12,8 @@ private:
     StatePlayView view;
     StatePlayInputHandling inputHandling;
 
+    sf::Clock levelElapsedTime;
+
 public:
     explicit StatePlay(GameManager* manager);
 
@@ -24,7 +26,6 @@ public:
 
     void UpdateGameStatus();
     void UpdateLeftTime();
-    void UpdateLeftLives();
     void UpdateExitLevelField();
     void UpdateBoard();
     void UpdateSnake(sf::Time deltaTime);
@@ -34,6 +35,10 @@ public:
 
     void Draw(sf::Time deltaTime) override;
 
+    void FinishedLevelWinSettings();
+    void FinishedLevelLossSettings();
+    void FinishedLevelSettings();
+    void FinishedGameSettings();
     void ExitStateSettings() override;
 };
 #endif

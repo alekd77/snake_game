@@ -87,7 +87,7 @@ public:
     void Draw() override;
 };
 
-enum HUDTileType {TIME, LIVES, SCORE};
+enum HUDTileType {TIME, LIVES, SCORE, LEVEL};
 
 class HUDTile : public InfoTile {
 private:

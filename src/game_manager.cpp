@@ -218,16 +218,16 @@ void GameManager::DisplayBasicGameInfo() {
             status = "PAUSED";
             break;
         }
-        case FINISHED_LOSS: {
-            status = "FINISHED_LOSS";
+        case FINISHED_LEVEL_LOSS: {
+            status = "FINISHED_LEVEL_LOSS";
             break;
         }
-        case FINISHED_LEVEL: {
-            status = "FINISHED_LEVEL";
+        case FINISHED_LEVEL_WIN: {
+            status = "FINISHED_LEVEL_WIN";
             break;
         }
-        case FINISHED_WIN: {
-            status = "FINISHED_WIN";
+        case FINISHED_GAME: {
+            status = "FINISHED_GAME";
             break;
         }
     }

@@ -90,33 +90,6 @@ char Board::GetFieldInfo(sf::Vector2i pos) const {
     return '_';
 }
 
-void Board::InitLevelSettings() {
-    this->obstaclesCounter = 0;
-    this->foodCounter = 0;
-    this->isExitAvailable = false;
-
-    if (this->gameManager.IsDebug())
-        CreateDefaultBoard();
-    else
-        CreateLevelCustomizedBoard();
-}
-
-void Board::CreateDefaultBoard() {
-    std::vector<std::vector<Field>> temp(
-            this->width, std::vector<Field>(
-                    this->height, {
-                        NONE_OBSTACLE,
-                        NONE_FOOD,
-                        false}));
-
-    this->board = temp;
-}
-
-void Board::CreateLevelCustomizedBoard() {
-    if (this->gameManager.IsDebug())
-        return;
-}
-
 void Board::SetObstacleOnField(ObstacleType obsType, sf::Vector2i pos) {
     if (!IsFieldFree(pos))
         return;
@@ -181,6 +154,59 @@ void Board::ClearField(sf::Vector2i pos) {
 
     this->board.at(pos.x).at(pos.y).isExit = false;
     this->isExitAvailable = false;
+}
+
+void Board::CreateDefaultBoard() {
+    std::vector<std::vector<Field>> temp(
+            this->width, std::vector<Field>(
+                    this->height, {
+                        NONE_OBSTACLE,
+                        NONE_FOOD,
+                        false}));
+
+    this->board = temp;
+}
+
+void Board::SetDebugBoardObstacles() {
+    SetObstacleOnField(WALL, {7, 8});
+    SetObstacleOnField(WALL, {8, 8});
+    SetObstacleOnField(WALL, {9, 8});
+    SetObstacleOnField(WALL, {20, 16});
+
+    SetObstacleOnField(ROCK, {30, 7});
+    SetObstacleOnField(ROCK, {21, 9});
+    SetObstacleOnField(ROCK, {18, 17});
+
+    SetObstacleOnField(FENCE, {15, 12});
+    SetObstacleOnField(FENCE, {28, 17});
+    SetObstacleOnField(FENCE, {5, 20});
+    SetObstacleOnField(FENCE, {14, 16});
+}
+
+void Board::SetDebugBoardFood() {
+
+}
+
+void Board::CreateDebugBoard() {
+    CreateDefaultBoard();
+    SetDebugBoardObstacles();
+    SetDebugBoardFood();
+}
+
+void Board::CreateLevelCustomizedBoard() {
+    if (this->gameManager.IsDebug())
+        return;
+}
+
+void Board::InitLevelSettings() {
+    this->obstaclesCounter = 0;
+    this->foodCounter = 0;
+    this->isExitAvailable = false;
+
+    if (this->gameManager.IsDebug())
+        CreateDebugBoard();
+    else
+        CreateLevelCustomizedBoard();
 }
 
 void Board::DebugDisplay() const {

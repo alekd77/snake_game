@@ -24,6 +24,7 @@ public:
     std::string GetHUDTileLeftLivesInfo() const;
     std::string GetHUDTileCurrentScoreInfo() const;
     std::string GetHUDTileScoreLevelGoalInfo() const;
+    std::string GetHUDTileCampaignLevelNumberInfo() const;
 
     void SetPermanentTiles();
     void InitHUDTilesSettings();

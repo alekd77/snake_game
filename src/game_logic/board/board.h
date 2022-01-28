@@ -33,18 +33,25 @@ public:
     int GetFoodCount() const;
     char GetFieldInfo(sf::Vector2i pos) const;
 
-    void InitLevelSettings();
-    void CreateDefaultBoard();
-    void CreateLevelCustomizedBoard();
     void SetObstacleOnField(ObstacleType obsType,
                             sf::Vector2i pos);
     void RemoveObstacleFromField(sf::Vector2i pos);
+
     void SetFoodOnField(FoodType foodType,
                         sf::Vector2i pos);
     void RemoveFoodFromField(sf::Vector2i pos);
+
     void SetExitFieldEnable();
     void SetFieldAsLevelExit(sf::Vector2i pos);
+
     void ClearField(sf::Vector2i pos);
+
+    void CreateDefaultBoard();
+    void SetDebugBoardObstacles();
+    void SetDebugBoardFood();
+    void CreateDebugBoard();
+    void CreateLevelCustomizedBoard();
+    void InitLevelSettings();
 
     void DebugDisplay() const;
 };

@@ -32,17 +32,29 @@ std::string StatePlayView::GetHUDTileScoreLevelGoalInfo() const {
             this->gameManager->GetCurrentScoreLevelGoal());
 }
 
+std::string StatePlayView::GetHUDTileCampaignLevelNumberInfo() const {
+    return std::to_string(
+            this->gameManager->GetCurrentGameLevel())
+                    + " / " + std::to_string(
+                    this->gameManager->GetMaxCampaignLevel());
+}
+
 void StatePlayView::SetPermanentTiles() {
     for (int y = 0; y < this->boardModel.GetBoardHeight(); ++y)
     {
         for (int x = 0; x < this->boardModel.GetBoardWidth(); ++x)
         {
+            char fieldInfo = '_';
+
+            if (this->boardModel.GetFieldInfo({x, y}) == 'W')
+                fieldInfo = 'W';
+
             BoardFieldTile tempBoardTile(
                     this->renderWindow,
                     {30, 30},
                     {x, y},
                     this->texturesManager,
-                    this->boardModel.GetFieldInfo({x, y}));
+                    fieldInfo);
 
             tempBoardTile.SetTileProperties();
 
@@ -77,12 +89,22 @@ void StatePlayView::InitHUDTilesSettings() {
                                    this->texturesManager,
                                    SCORE));
 
+    if (this->gameManager->GetGameMode() == CAMPAIGN)
+        this->hudTiles.emplace("level",
+                           HUDTile(this->renderWindow,
+                                   {910, 720},
+                                   this->fontsManager,
+                                   "Level: " + GetHUDTileCampaignLevelNumberInfo(),
+                                   this->texturesManager,
+                                   LEVEL));
+
     for (auto& hudTile : this->hudTiles)
         hudTile.second.SetTileProperties();
 }
 
 void StatePlayView::InitStateViewSettings() {
     SetPermanentTiles();
+    UpdateBoardTiles();
     UpdateSnakeTiles();
     InitHUDTilesSettings();
 }
@@ -93,13 +115,10 @@ void StatePlayView::UpdateBoardTiles() {
         for (int x = 0; x < this->boardModel.GetBoardWidth(); ++x)
         {
             // checks if field of given coord (x, y) is permanent
-            if (this->boardModel.GetFieldInfo({x, y}) == 'W')
-                continue;
-
-            if (this->boardModel.GetFieldInfo({x, y}) == 'F')
-                continue;
-
             if (this->boardModel.GetFieldInfo({x, y}) == '_')
+                continue;
+
+            if (this->boardModel.GetFieldInfo({x, y}) == 'W')
                 continue;
 
             BoardFieldTile tempBoardTile(
@@ -153,6 +172,7 @@ void StatePlayView::UpdateHUD() {
 }
 
 void StatePlayView::UpdateStateView() {
+    this->renderWindow.clear();
     UpdateTemporaryTiles();
     UpdateHUD();
 }
