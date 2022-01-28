@@ -31,10 +31,12 @@ bool Snake::IsSnakeAlive() const {
 }
 
 void Snake::InitLevelSettings() {
-    this->currentVelocity = 1.0;
+    this->currentVelocity = 5.0;
     this->currentHealth = 100;
+    this->currentDirection = {1, 0};
     SetInitSnakePos();
-    SetInitDirection();
+    this->posUpdateElapsedTime.restart();
+    this->previousTurnElapsedTime.restart();
 }
 
 void Snake::SetInitSnakePos() {
@@ -46,11 +48,6 @@ void Snake::SetInitSnakePos() {
         this->snakePos.push_front({2, 1});
         this->snakePos.push_front({3, 1});
     }
-}
-
-void Snake::SetInitDirection() {
-    if (this->gameManager.GetGameMode() == CAMPAIGN)
-        this->currentDirection = {0, 1};
 }
 
 void Snake::SetCurrentVelocity(float velocity) {
@@ -85,11 +82,11 @@ bool Snake::IsPosUpdateAvailable() const {
      is different than the next body part pos */
 
     if (std::floor(this->tempSnakePos.front().x) -
-            std::floor(this->tempSnakePos[1].x) > 0)
+            std::floor(this->tempSnakePos[1].x) != 0)
         return true;
 
     if (std::floor(this->tempSnakePos.front().y) -
-            std::floor(this->tempSnakePos[1].y) > 0)
+            std::floor(this->tempSnakePos[1].y) != 0)
         return true;
 
     return false;
@@ -107,11 +104,19 @@ void Snake::UpdatePos() {
 void Snake::Move(sf::Time deltaTime) {
     UpdateTemporaryGridBasedPos(deltaTime);
 
-    if (IsPosUpdateAvailable())
+    if (IsPosUpdateAvailable()) {
         UpdatePos();
+        this->posUpdateElapsedTime.restart();
+    }
 }
 
 bool Snake::IsTurnAvailable(std::pair<int, int> direction) const {
+   // turn is not available if the previous one
+   // was executed before updating snake pos
+   if (this->previousTurnElapsedTime.getElapsedTime() <
+            this->posUpdateElapsedTime.getElapsedTime())
+        return false;
+
     // direction interval can only be set as -1 <= x <= 1
     if (direction.first < -1 or direction.first > 1)
         return false;
@@ -140,6 +145,7 @@ void Snake::Turn(std::pair<int, int> direction) {
         return;
 
     this->currentDirection = direction;
+    this->previousTurnElapsedTime.restart();
 }
 
 void Snake::Update(sf::Time deltaTime) {

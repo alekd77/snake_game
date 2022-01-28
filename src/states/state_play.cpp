@@ -5,7 +5,10 @@ StatePlay::StatePlay(GameManager* manager) : StateInterface(manager),
                 board(*manager), snake(*manager),
                 view(this->gameManager,
                      this->board,
-                     this->snake) {}
+                     this->snake),
+                inputHandling(
+                        this->gameManager,
+                        this->snake) {}
 
 bool StatePlay::IsLevelFinished() {
     if (this->gameManager->GetGameStatus() == FINISHED_LOSS)
@@ -41,7 +44,7 @@ void StatePlay::SetScoreGoalPerLevel() {
 }
 
 void StatePlay::HandleInput() {
-
+    this->inputHandling.Update();
 }
 
 void StatePlay::UpdateGameStatus() {
@@ -94,7 +97,7 @@ void StatePlay::Update(sf::Time deltaTime) {
     if (this->gameManager->GetGameStatus() != RUNNING)
         return;
 
-    std::cout << "\nPlay state...\n";
+    //std::cout << "\nPlay state...\n";
 
     UpdateGameStatus();
     UpdateLeftLives();

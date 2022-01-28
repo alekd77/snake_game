@@ -3,12 +3,14 @@
 
 #include "state_interface.h"
 #include "state_play_view.h"
+#include "state_play_input_handling.h"
 
 class StatePlay : public StateInterface {
 private:
     Board board;
     Snake snake;
     StatePlayView view;
+    StatePlayInputHandling inputHandling;
 
 public:
     explicit StatePlay(GameManager* manager);

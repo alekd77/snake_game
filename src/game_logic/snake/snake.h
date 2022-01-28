@@ -14,6 +14,8 @@ private:
     std::pair<int, int> currentDirection;
     float currentVelocity;
     int currentHealth;
+    sf::Clock posUpdateElapsedTime;
+    sf::Clock previousTurnElapsedTime;
 
 public:
     explicit Snake(GameManager& manager);
@@ -27,7 +29,6 @@ public:
 
     void InitLevelSettings();
     void SetInitSnakePos();
-    void SetInitDirection();
     void SetCurrentVelocity(float velocity);
     void SetCurrentHealth(int health);
 
